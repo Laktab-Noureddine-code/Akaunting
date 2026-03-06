@@ -1,0 +1,2309 @@
+{
+  "info": {
+    "_postman_id": "akaunting-api-collection",
+    "name": "Akaunting API",
+    "description": "Complete API collection for the Akaunting Laravel backend.\n\n**Authentication:**\n- POST /api/login to get a Bearer token\n- Use the token in the Authorization header for all other requests\n- Pass company context via X-Company header or ?company_id= query param\n\n**Base URL:** {{base_url}} (default: http://localhost:8000/api)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "company_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints for login, logout, and profile.",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.success && jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('auth_token', jsonData.data.token);",
+                  "    if (jsonData.data.user.companies && jsonData.data.user.companies.length > 0) {",
+                  "        pm.collectionVariables.set('company_id', jsonData.data.user.companies[0].id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@company.com\",\n    \"password\": \"123456\",\n    \"device_name\": \"postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            },
+            "description": "Authenticate and receive a Sanctum Bearer token.\n\nThe token is automatically saved to the `auth_token` collection variable."
+          },
+          "response": [
+            {
+              "name": "Login - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"token\": \"1|aBcDeFgHiJkLmNoPqRsTuVwXyZ123456789\",\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Admin\",\n            \"email\": \"admin@company.com\",\n            \"locale\": \"en-GB\",\n            \"landing_page\": \"dashboard\",\n            \"companies\": [\n                {\n                    \"id\": 1,\n                    \"name\": \"My Company\",\n                    \"domain\": \"\"\n                }\n            ],\n            \"roles\": [\"admin\"]\n        }\n    }\n}"
+            },
+            {
+              "name": "Login - Invalid Credentials",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"message\": \"The given data was invalid.\",\n    \"errors\": {\n        \"email\": [\"These credentials do not match our records.\"]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            },
+            "description": "Revoke the current Sanctum token (logout)."
+          },
+          "response": [
+            {
+              "name": "Logout - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Logged out successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            },
+            "description": "Get the authenticated user's profile."
+          },
+          "response": [
+            {
+              "name": "Profile - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Admin\",\n        \"email\": \"admin@company.com\",\n        \"locale\": \"en-GB\",\n        \"landing_page\": \"dashboard\",\n        \"enabled\": true,\n        \"last_logged_in_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n        \"companies\": [\n            {\n                \"id\": 1,\n                \"name\": \"My Company\",\n                \"email\": \"company@example.com\",\n                \"domain\": \"\",\n                \"currency\": \"USD\",\n                \"enabled\": true\n            }\n        ],\n        \"roles\": [\"admin\"]\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Ping",
+      "description": "Health check endpoint.",
+      "item": [
+        {
+          "name": "Ping - Pong",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/ping",
+              "host": ["{{base_url}}"],
+              "path": ["ping"]
+            },
+            "description": "Health check - returns pong if API is up."
+          },
+          "response": [
+            {
+              "name": "Ping - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": \"pong\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User management endpoints (CRUD + enable/disable).",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users?search=&limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search string (e.g. name:John)"
+                },
+                {
+                  "key": "limit",
+                  "value": "15",
+                  "description": "Items per page"
+                },
+                { "key": "page", "value": "1", "description": "Page number" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Users - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Admin\",\n            \"email\": \"admin@company.com\",\n            \"locale\": \"en-GB\",\n            \"landing_page\": \"dashboard\",\n            \"enabled\": true,\n            \"created_from\": \"core::seed\",\n            \"created_by\": \"\",\n            \"last_logged_in_at\": \"2025-01-15T10:30:00.000000Z\",\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-15T10:30:00.000000Z\",\n            \"companies\": { \"data\": [] },\n            \"roles\": { \"data\": [] }\n        }\n    ],\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"per_page\": 15,\n        \"to\": 1,\n        \"total\": 1\n    },\n    \"links\": {\n        \"first\": \"http://localhost:8000/api/users?page=1\",\n        \"last\": \"http://localhost:8000/api/users?page=1\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["users", "1"]
+            }
+          },
+          "response": [
+            {
+              "name": "Show User - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Admin\",\n        \"email\": \"admin@company.com\",\n        \"locale\": \"en-GB\",\n        \"landing_page\": \"dashboard\",\n        \"enabled\": true,\n        \"created_from\": \"core::seed\",\n        \"created_by\": \"\",\n        \"last_logged_in_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n        \"updated_at\": \"2025-01-15T10:30:00.000000Z\",\n        \"companies\": { \"data\": [] },\n        \"roles\": { \"data\": [] }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@company.com\",\n    \"password\": \"SecurePass123\",\n    \"password_confirmation\": \"SecurePass123\",\n    \"companies\": [1],\n    \"roles\": \"admin\",\n    \"landing_page\": \"dashboard\",\n    \"locale\": \"en-GB\",\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
+          },
+          "response": [
+            {
+              "name": "Create User - Success",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"John Doe\",\n        \"email\": \"john@company.com\",\n        \"locale\": \"en-GB\",\n        \"landing_page\": \"dashboard\",\n        \"enabled\": true,\n        \"created_from\": \"api\",\n        \"created_by\": \"1\",\n        \"last_logged_in_at\": \"\",\n        \"created_at\": \"2025-01-16T12:00:00.000000Z\",\n        \"updated_at\": \"2025-01-16T12:00:00.000000Z\",\n        \"companies\": { \"data\": [] },\n        \"roles\": { \"data\": [] }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Updated\",\n    \"email\": \"john@company.com\",\n    \"companies\": [1],\n    \"roles\": \"admin\",\n    \"landing_page\": \"dashboard\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/2",
+              "host": ["{{base_url}}"],
+              "path": ["users", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/2",
+              "host": ["{{base_url}}"],
+              "path": ["users", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/2/enable",
+              "host": ["{{base_url}}"],
+              "path": ["users", "2", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable User",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/2/disable",
+              "host": ["{{base_url}}"],
+              "path": ["users", "2", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Companies",
+      "description": "Company management endpoints.",
+      "item": [
+        {
+          "name": "List Companies",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["companies"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Companies - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"My Company\",\n            \"email\": \"company@example.com\",\n            \"currency\": \"USD\",\n            \"domain\": \"\",\n            \"address\": \"123 Main St\",\n            \"logo\": \"\",\n            \"enabled\": true,\n            \"created_from\": \"core::seed\",\n            \"created_by\": \"1\",\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/1",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"New Company\",\n    \"email\": \"new@company.com\",\n    \"currency\": \"USD\",\n    \"domain\": \"newcompany.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies",
+              "host": ["{{base_url}}"],
+              "path": ["companies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Company\",\n    \"email\": \"updated@company.com\",\n    \"currency\": \"EUR\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/companies/1",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/2",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check Owner Access",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/1/owner",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1", "owner"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Company",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/companies/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["companies", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Dashboards",
+      "description": "Dashboard management endpoints.",
+      "item": [
+        {
+          "name": "List Dashboards",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboards?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["dashboards"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Dashboards - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"name\": \"Dashboard\",\n            \"enabled\": true,\n            \"created_from\": \"core::seed\",\n            \"created_by\": \"1\",\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"widgets\": { \"data\": [] }\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboards/1",
+              "host": ["{{base_url}}"],
+              "path": ["dashboards", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Dashboard",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Sales Dashboard\",\n    \"users\": [1]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/dashboards",
+              "host": ["{{base_url}}"],
+              "path": ["dashboards"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Dashboard",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Dashboard\",\n    \"users\": [1]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/dashboards/1",
+              "host": ["{{base_url}}"],
+              "path": ["dashboards", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Dashboard",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboards/1",
+              "host": ["{{base_url}}"],
+              "path": ["dashboards", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboards/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["dashboards", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboards/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["dashboards", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "description": "Product/Service item management.",
+      "item": [
+        {
+          "name": "List Items",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/items?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["items"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Items - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"type\": \"product\",\n            \"name\": \"Widget\",\n            \"description\": \"A sample widget\",\n            \"sale_price\": 25.00,\n            \"sale_price_formatted\": \"$25.00\",\n            \"purchase_price\": 10.00,\n            \"purchase_price_formatted\": \"$10.00\",\n            \"category_id\": 1,\n            \"picture\": \"\",\n            \"enabled\": true,\n            \"created_from\": \"api\",\n            \"created_by\": \"1\",\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"taxes\": { \"data\": [] },\n            \"category\": null\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Item",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/items/1",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"product\",\n    \"name\": \"New Product\",\n    \"sale_price\": 49.99,\n    \"purchase_price\": 25.00,\n    \"category_id\": 1,\n    \"tax_ids\": [],\n    \"enabled\": 1,\n    \"description\": \"A sample product description\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/items",
+              "host": ["{{base_url}}"],
+              "path": ["items"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"product\",\n    \"name\": \"Updated Product\",\n    \"sale_price\": 59.99,\n    \"purchase_price\": 30.00,\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/items/1",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/items/1",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Item",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/items/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Item",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/items/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["items", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "description": "Customer/Vendor contact management.",
+      "item": [
+        {
+          "name": "List Contacts",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contacts?search=type:customer&limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["contacts"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "type:customer",
+                  "description": "Filter by type (customer or vendor)"
+                },
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Contacts - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"user_id\": null,\n            \"type\": \"customer\",\n            \"name\": \"John Customer\",\n            \"email\": \"john@customer.com\",\n            \"tax_number\": \"TX-12345\",\n            \"phone\": \"+1234567890\",\n            \"address\": \"456 Oak Ave\",\n            \"website\": \"https://customer.com\",\n            \"currency_code\": \"USD\",\n            \"enabled\": true,\n            \"reference\": \"\",\n            \"created_from\": \"api\",\n            \"created_by\": \"1\",\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"contact_persons\": { \"data\": [] }\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Contact",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contacts/1",
+              "host": ["{{base_url}}"],
+              "path": ["contacts", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Contact",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"customer\",\n    \"name\": \"Jane Smith\",\n    \"email\": \"jane@example.com\",\n    \"currency_code\": \"USD\",\n    \"phone\": \"+1234567890\",\n    \"address\": \"789 Pine St\",\n    \"tax_number\": \"TX-67890\",\n    \"website\": \"https://janesmith.com\",\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/contacts",
+              "host": ["{{base_url}}"],
+              "path": ["contacts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Contact",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"customer\",\n    \"name\": \"Jane Updated\",\n    \"email\": \"jane@example.com\",\n    \"currency_code\": \"USD\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/contacts/1",
+              "host": ["{{base_url}}"],
+              "path": ["contacts", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Contact",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contacts/1",
+              "host": ["{{base_url}}"],
+              "path": ["contacts", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Contact",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contacts/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["contacts", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Contact",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/contacts/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["contacts", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "description": "Invoice/Bill document management.",
+      "item": [
+        {
+          "name": "List Documents",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents?search=type:invoice&limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["documents"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "type:invoice",
+                  "description": "Filter by type (invoice or bill)"
+                },
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Documents - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"type\": \"invoice\",\n            \"document_number\": \"INV-00001\",\n            \"order_number\": \"\",\n            \"status\": \"sent\",\n            \"issued_at\": \"2025-01-15T00:00:00.000000Z\",\n            \"due_at\": \"2025-02-15T00:00:00.000000Z\",\n            \"amount\": 150.00,\n            \"amount_formatted\": \"$150.00\",\n            \"category_id\": 1,\n            \"currency_code\": \"USD\",\n            \"currency_rate\": 1.0,\n            \"contact_id\": 1,\n            \"contact_name\": \"John Customer\",\n            \"contact_email\": \"john@customer.com\",\n            \"notes\": \"\",\n            \"created_at\": \"2025-01-15T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-15T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Document",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Document (Invoice)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"invoice\",\n    \"document_number\": \"INV-00002\",\n    \"status\": \"draft\",\n    \"issued_at\": \"2025-01-20 00:00:00\",\n    \"due_at\": \"2025-02-20 00:00:00\",\n    \"amount\": 250.00,\n    \"currency_code\": \"USD\",\n    \"currency_rate\": 1,\n    \"contact_id\": 1,\n    \"contact_name\": \"John Customer\",\n    \"category_id\": 1,\n    \"items\": [\n        {\n            \"name\": \"Web Development\",\n            \"quantity\": 5,\n            \"price\": 50.00,\n            \"description\": \"Frontend development hours\"\n        }\n    ],\n    \"notes\": \"Payment due within 30 days\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/documents",
+              "host": ["{{base_url}}"],
+              "path": ["documents"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Document",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"invoice\",\n    \"document_number\": \"INV-00002\",\n    \"status\": \"sent\",\n    \"issued_at\": \"2025-01-20 00:00:00\",\n    \"due_at\": \"2025-02-20 00:00:00\",\n    \"amount\": 300.00,\n    \"currency_code\": \"USD\",\n    \"currency_rate\": 1,\n    \"contact_id\": 1,\n    \"contact_name\": \"John Customer\",\n    \"category_id\": 1,\n    \"items\": [\n        {\n            \"name\": \"Web Development\",\n            \"quantity\": 6,\n            \"price\": 50.00\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/documents/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Document Received",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1/received",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1", "received"]
+            },
+            "description": "Mark a document (typically a bill) as received."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Document Transactions",
+      "description": "Payments/transactions linked to documents.",
+      "item": [
+        {
+          "name": "List Document Transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1", "transactions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Document Transaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"income\",\n    \"number\": \"TXN-00001\",\n    \"account_id\": 1,\n    \"paid_at\": \"2025-01-20 00:00:00\",\n    \"amount\": 150.00,\n    \"currency_code\": \"USD\",\n    \"currency_rate\": 1,\n    \"category_id\": 1,\n    \"payment_method\": \"offlinepayment.cash.1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/documents/1/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1", "transactions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Document Transaction",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1/transactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1", "transactions", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document Transaction",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1/transactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1", "transactions", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "description": "Bank account management.",
+      "item": [
+        {
+          "name": "List Accounts",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["accounts"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Accounts - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"type\": \"bank\",\n            \"name\": \"Cash\",\n            \"number\": \"ACC-001\",\n            \"currency_code\": \"USD\",\n            \"opening_balance\": 0.00,\n            \"opening_balance_formatted\": \"$0.00\",\n            \"current_balance\": 5000.00,\n            \"current_balance_formatted\": \"$5,000.00\",\n            \"bank_name\": \"Local Bank\",\n            \"bank_phone\": \"\",\n            \"bank_address\": \"\",\n            \"enabled\": true,\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Account",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/1",
+              "host": ["{{base_url}}"],
+              "path": ["accounts", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"bank\",\n    \"name\": \"Business Checking\",\n    \"number\": \"ACC-002\",\n    \"currency_code\": \"USD\",\n    \"opening_balance\": 10000.00,\n    \"bank_name\": \"National Bank\",\n    \"bank_phone\": \"+1234567890\",\n    \"bank_address\": \"100 Bank St\",\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts",
+              "host": ["{{base_url}}"],
+              "path": ["accounts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"bank\",\n    \"name\": \"Updated Checking\",\n    \"number\": \"ACC-002\",\n    \"currency_code\": \"USD\",\n    \"opening_balance\": 10000.00,\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/accounts/1",
+              "host": ["{{base_url}}"],
+              "path": ["accounts", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/1",
+              "host": ["{{base_url}}"],
+              "path": ["accounts", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Account",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["accounts", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Account",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/accounts/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["accounts", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reconciliations",
+      "description": "Bank reconciliation management.",
+      "item": [
+        {
+          "name": "List Reconciliations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reconciliations?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["reconciliations"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Show Reconciliation",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reconciliations/1",
+              "host": ["{{base_url}}"],
+              "path": ["reconciliations", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Reconciliation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"account_id\": 1,\n    \"started_at\": \"2025-01-01 00:00:00\",\n    \"ended_at\": \"2025-01-31 23:59:59\",\n    \"closing_balance\": 5000.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reconciliations",
+              "host": ["{{base_url}}"],
+              "path": ["reconciliations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Reconciliation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"account_id\": 1,\n    \"started_at\": \"2025-01-01 00:00:00\",\n    \"ended_at\": \"2025-01-31 23:59:59\",\n    \"closing_balance\": 5250.00\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reconciliations/1",
+              "host": ["{{base_url}}"],
+              "path": ["reconciliations", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Reconciliation",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reconciliations/1",
+              "host": ["{{base_url}}"],
+              "path": ["reconciliations", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "description": "Income/Expense transaction management.",
+      "item": [
+        {
+          "name": "List Transactions",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/transactions?search=type:income&limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["transactions"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "type:income",
+                  "description": "Filter by type (income or expense)"
+                },
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Transactions - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"number\": \"TXN-00001\",\n            \"company_id\": 1,\n            \"type\": \"income\",\n            \"account_id\": 1,\n            \"paid_at\": \"2025-01-20T00:00:00.000000Z\",\n            \"amount\": 150.00,\n            \"amount_formatted\": \"$150.00\",\n            \"currency_code\": \"USD\",\n            \"currency_rate\": 1.0,\n            \"document_id\": null,\n            \"contact_id\": 1,\n            \"description\": \"Payment received\",\n            \"category_id\": 1,\n            \"payment_method\": \"offlinepayment.cash.1\",\n            \"reference\": \"\",\n            \"created_at\": \"2025-01-20T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-20T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Transaction",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/transactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Transaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"income\",\n    \"number\": \"TXN-00002\",\n    \"account_id\": 1,\n    \"paid_at\": \"2025-01-25 00:00:00\",\n    \"amount\": 500.00,\n    \"currency_code\": \"USD\",\n    \"currency_rate\": 1,\n    \"category_id\": 1,\n    \"payment_method\": \"offlinepayment.cash.1\",\n    \"contact_id\": 1,\n    \"description\": \"Consulting fee\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions",
+              "host": ["{{base_url}}"],
+              "path": ["transactions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Transaction",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"income\",\n    \"number\": \"TXN-00002\",\n    \"account_id\": 1,\n    \"paid_at\": \"2025-01-25 00:00:00\",\n    \"amount\": 600.00,\n    \"currency_code\": \"USD\",\n    \"currency_rate\": 1,\n    \"category_id\": 1,\n    \"payment_method\": \"offlinepayment.cash.1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Transaction",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/transactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transfers",
+      "description": "Bank transfer management between accounts.",
+      "item": [
+        {
+          "name": "List Transfers",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/transfers?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["transfers"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Transfers - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"from_account\": \"Cash\",\n            \"from_account_id\": 1,\n            \"to_account\": \"Business Checking\",\n            \"to_account_id\": 2,\n            \"amount\": 1000.00,\n            \"amount_formatted\": \"$1,000.00\",\n            \"currency_code\": \"USD\",\n            \"paid_at\": \"2025-01-20T00:00:00.000000Z\",\n            \"created_at\": \"2025-01-20T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-20T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Transfer",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/transfers/1",
+              "host": ["{{base_url}}"],
+              "path": ["transfers", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Transfer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"from_account_id\": 1,\n    \"to_account_id\": 2,\n    \"amount\": 500.00,\n    \"transferred_at\": \"2025-01-25\",\n    \"payment_method\": \"offlinepayment.cash.1\",\n    \"description\": \"Transfer to checking\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transfers",
+              "host": ["{{base_url}}"],
+              "path": ["transfers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Transfer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"from_account_id\": 1,\n    \"to_account_id\": 2,\n    \"amount\": 750.00,\n    \"transferred_at\": \"2025-01-25\",\n    \"payment_method\": \"offlinepayment.cash.1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transfers/1",
+              "host": ["{{base_url}}"],
+              "path": ["transfers", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Transfer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/transfers/1",
+              "host": ["{{base_url}}"],
+              "path": ["transfers", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "description": "Report management.",
+      "item": [
+        {
+          "name": "List Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["reports"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Reports - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"class\": \"App\\\\Reports\\\\IncomeSummary\",\n            \"name\": \"Income Summary\",\n            \"description\": \"Monthly income summary\",\n            \"settings\": {},\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/1",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Report",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Expense Summary\",\n    \"description\": \"Monthly expense breakdown\",\n    \"class\": \"App\\\\Reports\\\\ExpenseSummary\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": ["{{base_url}}"],
+              "path": ["reports"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Report",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Report\",\n    \"description\": \"Updated description\",\n    \"class\": \"App\\\\Reports\\\\ExpenseSummary\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reports/1",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Report",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/1",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "description": "Category management for income/expense/items.",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["categories"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Categories - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"name\": \"Sales\",\n            \"type\": \"income\",\n            \"color\": \"#55588b\",\n            \"enabled\": true,\n            \"parent_id\": null,\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Consulting\",\n    \"type\": \"income\",\n    \"color\": \"#3498db\",\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories",
+              "host": ["{{base_url}}"],
+              "path": ["categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Category\",\n    \"type\": \"income\",\n    \"color\": \"#e74c3c\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Category",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/categories/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["categories", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Currencies",
+      "description": "Currency management.",
+      "item": [
+        {
+          "name": "List Currencies",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/currencies?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["currencies"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Currencies - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"name\": \"US Dollar\",\n            \"code\": \"USD\",\n            \"rate\": 1.0,\n            \"enabled\": true,\n            \"precision\": 2,\n            \"symbol\": \"$\",\n            \"symbol_first\": true,\n            \"decimal_mark\": \".\",\n            \"thousands_separator\": \",\",\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Currency",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/currencies/1",
+              "host": ["{{base_url}}"],
+              "path": ["currencies", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Currency",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Euro\",\n    \"code\": \"EUR\",\n    \"rate\": 0.92,\n    \"symbol\": \"\\u20ac\",\n    \"symbol_first\": true,\n    \"decimal_mark\": \",\",\n    \"thousands_separator\": \".\",\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/currencies",
+              "host": ["{{base_url}}"],
+              "path": ["currencies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Currency",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Euro\",\n    \"code\": \"EUR\",\n    \"rate\": 0.95,\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/currencies/1",
+              "host": ["{{base_url}}"],
+              "path": ["currencies", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Currency",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/currencies/1",
+              "host": ["{{base_url}}"],
+              "path": ["currencies", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Currency",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/currencies/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["currencies", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Currency",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/currencies/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["currencies", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Taxes",
+      "description": "Tax rate management.",
+      "item": [
+        {
+          "name": "List Taxes",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/taxes?limit=15&page=1",
+              "host": ["{{base_url}}"],
+              "path": ["taxes"],
+              "query": [
+                { "key": "limit", "value": "15" },
+                { "key": "page", "value": "1" }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "List Taxes - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"name\": \"VAT\",\n            \"rate\": 20.00,\n            \"enabled\": true,\n            \"created_at\": \"2025-01-01T00:00:00.000000Z\",\n            \"updated_at\": \"2025-01-01T00:00:00.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Tax",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/taxes/1",
+              "host": ["{{base_url}}"],
+              "path": ["taxes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Tax",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Sales Tax\",\n    \"rate\": 10,\n    \"type\": \"normal\",\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/taxes",
+              "host": ["{{base_url}}"],
+              "path": ["taxes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Tax",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Tax\",\n    \"rate\": 15,\n    \"type\": \"normal\",\n    \"enabled\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/taxes/1",
+              "host": ["{{base_url}}"],
+              "path": ["taxes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Tax",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/taxes/1",
+              "host": ["{{base_url}}"],
+              "path": ["taxes", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Enable Tax",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/taxes/1/enable",
+              "host": ["{{base_url}}"],
+              "path": ["taxes", "1", "enable"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable Tax",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/taxes/1/disable",
+              "host": ["{{base_url}}"],
+              "path": ["taxes", "1", "disable"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "description": "Application settings (key-value pairs).",
+      "item": [
+        {
+          "name": "List Settings",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings",
+              "host": ["{{base_url}}"],
+              "path": ["settings"]
+            }
+          },
+          "response": [
+            {
+              "name": "List Settings - Success",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"company_id\": 1,\n            \"key\": \"company.name\",\n            \"value\": \"My Company\"\n        },\n        {\n            \"id\": 2,\n            \"company_id\": 1,\n            \"key\": \"company.email\",\n            \"value\": \"company@example.com\"\n        },\n        {\n            \"id\": 3,\n            \"company_id\": 1,\n            \"key\": \"default.currency\",\n            \"value\": \"USD\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Show Setting",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings/1",
+              "host": ["{{base_url}}"],
+              "path": ["settings", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Setting",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"key\": \"custom.setting_name\",\n    \"value\": \"setting_value\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/settings",
+              "host": ["{{base_url}}"],
+              "path": ["settings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Setting",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"key\": \"custom.setting_name\",\n    \"value\": \"updated_value\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/settings/1",
+              "host": ["{{base_url}}"],
+              "path": ["settings", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Setting",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/settings/1",
+              "host": ["{{base_url}}"],
+              "path": ["settings", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Translations",
+      "description": "Translation/localization endpoints.",
+      "item": [
+        {
+          "name": "Get All Translations",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/translations/en-GB/all",
+              "host": ["{{base_url}}"],
+              "path": ["translations", "en-GB", "all"]
+            },
+            "description": "Get all translations for a locale."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Translation File",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "X-Company", "value": "{{company_id}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/translations/en-GB/general",
+              "host": ["{{base_url}}"],
+              "path": ["translations", "en-GB", "general"]
+            },
+            "description": "Get translations from a specific file (e.g. general, auth, documents, invoices)."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
