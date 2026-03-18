@@ -136,6 +136,12 @@ class Validation extends Provider
 
             $methods = Modules::getPaymentMethods('all');
 
+            // In fresh/dev environments payment methods may not be configured yet.
+            // Accept a non-empty value so API operations can continue.
+            if (empty($methods)) {
+                return ! empty($value);
+            }
+
             if (array_key_exists($value, $methods)) {
                 $status = true;
             }

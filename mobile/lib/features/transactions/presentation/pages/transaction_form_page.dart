@@ -35,7 +35,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
   int? _accountId;
   int? _categoryId;
   int? _contactId;
-  String _paymentMethod = 'offline.cash';
+  String _paymentMethod = 'offline-payments.cash.1';
   bool _loadingLookups = true;
   String? _lookupError;
 
