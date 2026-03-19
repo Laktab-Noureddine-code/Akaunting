@@ -29,7 +29,7 @@ Future<void> init() async {
 
   sl.registerLazySingleton<ApiClient>(
     () => ApiClient(
-      baseUrl: kIsWeb ? 'http://127.0.0.1:8000' : 'http://10.0.2.2:8000',
+      baseUrl: kIsWeb ? 'http://127.0.0.1:8000' : 'http://192.168.1.107:8000',
       authInterceptor: sl<AuthInterceptor>(),
     ),
   );
@@ -61,7 +61,9 @@ Future<void> init() async {
   );
 
   sl.registerFactory<ReconciliationCubit>(
-    () => ReconciliationCubit(reconciliationRepository: sl<ReconciliationRepository>()),
+    () => ReconciliationCubit(
+      reconciliationRepository: sl<ReconciliationRepository>(),
+    ),
   );
 
   // Transactions
@@ -69,7 +71,5 @@ Future<void> init() async {
     () => TransactionRepository(),
   );
 
-  sl.registerFactory<TransactionCubit>(
-    () => TransactionCubit(),
-  );
+  sl.registerFactory<TransactionCubit>(() => TransactionCubit());
 }
