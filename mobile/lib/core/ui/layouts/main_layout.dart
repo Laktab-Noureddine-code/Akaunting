@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../features/accounts/presentation/pages/accounts_list_page.dart';
 import '../../../../features/reconciliations/presentation/pages/reconciliations_list_page.dart';
+import '../../../../features/transfers/presentation/pages/transfers_list_page.dart';
 import '../../../../features/transactions/presentation/pages/transactions_list_page.dart';
 
 class MainLayout extends StatefulWidget {
@@ -17,6 +18,7 @@ class _MainLayoutState extends State<MainLayout> {
     const Center(child: Text('Dashboard Placeholder')),
     const AccountsListPage(), // Developer 3 tasks
     const ReconciliationsListPage(),
+    const TransfersListPage(),
     const TransactionsListPage(),
     const Center(child: Text('Settings Placeholder')),
   ];
@@ -48,6 +50,10 @@ class _MainLayoutState extends State<MainLayout> {
           BottomNavigationBarItem(
             icon: Icon(Icons.receipt_long),
             label: 'Reconciliations',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.compare_arrows),
+            label: 'Transfers',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.swap_horiz),

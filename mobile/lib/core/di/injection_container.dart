@@ -10,7 +10,9 @@ import '../../logic/cubits/account_cubit.dart';
 import '../../features/reconciliations/domain/repositories/reconciliation_repository.dart';
 import '../../features/reconciliations/data/repositories/reconciliation_repository.dart';
 import '../../logic/cubits/reconciliation_cubit.dart';
+import '../../domain/repositories/transfer_repository.dart';
 import '../../domain/repositories/transaction_repository.dart';
+import '../../features/transfers/presentation/cubit/transfer_cubit.dart';
 import '../../features/transactions/presentation/cubit/transaction_cubit.dart';
 import '../network/api_client.dart';
 import '../network/auth_interceptor.dart';
@@ -62,6 +64,15 @@ Future<void> init() async {
 
   sl.registerFactory<ReconciliationCubit>(
     () => ReconciliationCubit(reconciliationRepository: sl<ReconciliationRepository>()),
+  );
+
+  // Transfers
+  sl.registerLazySingleton<TransferRepository>(
+    () => TransferRepository(),
+  );
+
+  sl.registerFactory<TransferCubit>(
+    () => TransferCubit(),
   );
 
   // Transactions
