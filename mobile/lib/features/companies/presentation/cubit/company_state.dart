@@ -28,6 +28,21 @@ class CompanyLoaded extends CompanyState {
   }
 }
 
+class CompanySaved extends CompanyState {
+  final CompanyModel company;
+
+  const CompanySaved(this.company);
+}
+
+class CompanyDeleted extends CompanyState {}
+
+class CompanyOwnerChecked extends CompanyState {
+  final bool isOwner;
+  final int companyId;
+
+  const CompanyOwnerChecked(this.isOwner, this.companyId);
+}
+
 class CompanyError extends CompanyState {
   final String message;
 

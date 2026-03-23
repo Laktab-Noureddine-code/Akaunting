@@ -21,6 +21,80 @@ class CompanyRepositoryImpl implements CompanyRepository {
     }
   }
 
+  @override
+  Future<CompanyModel> getCompany(int id) async {
+    try {
+      final response = await _dio.get('/api/companies/$id');
+      final data = response.data as Map<String, dynamic>;
+      return CompanyModel.fromJson(data['data']);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<CompanyModel> createCompany(Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.post('/api/companies', data: data);
+      final responseData = response.data as Map<String, dynamic>;
+      return CompanyModel.fromJson(responseData['data']);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<CompanyModel> updateCompany(int id, Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.patch('/api/companies/$id', data: data);
+      final responseData = response.data as Map<String, dynamic>;
+      return CompanyModel.fromJson(responseData['data']);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<void> deleteCompany(int id) async {
+    try {
+      await _dio.delete('/api/companies/$id');
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<CompanyModel> enableCompany(int id) async {
+    try {
+      final response = await _dio.get('/api/companies/$id/enable');
+      final data = response.data as Map<String, dynamic>;
+      return CompanyModel.fromJson(data['data']);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<CompanyModel> disableCompany(int id) async {
+    try {
+      final response = await _dio.get('/api/companies/$id/disable');
+      final data = response.data as Map<String, dynamic>;
+      return CompanyModel.fromJson(data['data']);
+    } on DioException catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  @override
+  Future<bool> checkOwner(int id) async {
+    try {
+      await _dio.get('/api/companies/$id/owner');
+      return true;
+    } on DioException catch (_) {
+      return false;
+    }
+  }
+
   Exception _handleError(DioException e) {
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout) {

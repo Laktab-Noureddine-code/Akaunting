@@ -4,6 +4,7 @@ import '../../../companies/presentation/cubit/company_cubit.dart';
 import '../../../companies/presentation/widgets/company_switcher.dart';
 import '../../../profile/presentation/cubit/profile_cubit.dart';
 import '../../../profile/presentation/cubit/profile_state.dart';
+import '../../../companies/presentation/pages/companies_list_page.dart';
 import 'dashboards_list_page.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -33,13 +34,30 @@ class _DashboardPageState extends State<DashboardPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Company Switcher at the top
-              const Text(
-                'Company',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF6B7280),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Company',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF6B7280),
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CompaniesListPage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.settings, size: 14),
+                    label: const Text('Manage', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
               ),
               const SizedBox(height: 8),
               const CompanySwitcher(),
