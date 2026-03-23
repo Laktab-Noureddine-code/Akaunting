@@ -12,6 +12,12 @@ import '../../features/reconciliations/data/repositories/reconciliation_reposito
 import '../../logic/cubits/reconciliation_cubit.dart';
 import '../../domain/repositories/transaction_repository.dart';
 import '../../features/transactions/presentation/cubit/transaction_cubit.dart';
+import '../../features/companies/domain/repositories/company_repository.dart';
+import '../../features/companies/data/repositories/company_repository_impl.dart';
+import '../../features/companies/presentation/cubit/company_cubit.dart';
+import '../../features/profile/domain/repositories/profile_repository.dart';
+import '../../features/profile/data/repositories/profile_repository_impl.dart';
+import '../../features/profile/presentation/cubit/profile_cubit.dart';
 import '../network/api_client.dart';
 import '../network/auth_interceptor.dart';
 
@@ -72,4 +78,22 @@ Future<void> init() async {
   );
 
   sl.registerFactory<TransactionCubit>(() => TransactionCubit());
+
+  // Companies
+  sl.registerLazySingleton<CompanyRepository>(
+    () => CompanyRepositoryImpl(dio: sl<ApiClient>().dio),
+  );
+
+  sl.registerFactory<CompanyCubit>(
+    () => CompanyCubit(repository: sl<CompanyRepository>()),
+  );
+
+  // Profile
+  sl.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepositoryImpl(dio: sl<ApiClient>().dio),
+  );
+
+  sl.registerFactory<ProfileCubit>(
+    () => ProfileCubit(repository: sl<ProfileRepository>()),
+  );
 }
