@@ -11,6 +11,7 @@ import '../../../features/currencies/presentation/pages/currencies_list_page.dar
 import '../../../features/taxes/presentation/pages/taxes_list_page.dart';
 import '../../../features/translations/presentation/pages/translations_page.dart';
 import '../../../features/auth/presentation/pages/auth_check_page.dart';
+import '../../../features/users/presentation/pages/users_list_page.dart';
 
 class AppDrawer extends StatelessWidget {
   final int currentIndex;
@@ -132,6 +133,20 @@ class AppDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (_) => const ReconciliationsListPage()),
+                );
+              },
+            ),
+
+            // Team
+            _DrawerSectionHeader(label: 'Team'),
+            _DrawerItem(
+              icon: Icons.people,
+              label: 'Users',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const UsersListPage()),
                 );
               },
             ),
