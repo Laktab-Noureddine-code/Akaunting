@@ -7,6 +7,12 @@ import '../../logic/cubits/auth_cubit.dart';
 import '../../features/accounts/domain/repositories/account_repository.dart';
 import '../../features/accounts/data/repositories/account_repository.dart';
 import '../../logic/cubits/account_cubit.dart';
+import '../../features/items/domain/repositories/item_repository.dart';
+import '../../features/items/data/repositories/item_repository.dart';
+import '../../logic/cubits/item_cubit.dart';
+import '../../features/contacts/domain/repositories/contact_repository.dart';
+import '../../features/contacts/data/repositories/contact_repository_impl.dart';
+import '../../logic/cubits/contact_cubit.dart';
 import '../../features/reconciliations/domain/repositories/reconciliation_repository.dart';
 import '../../features/reconciliations/data/repositories/reconciliation_repository.dart';
 import '../../logic/cubits/reconciliation_cubit.dart';
@@ -80,6 +86,24 @@ Future<void> init() async {
 
   sl.registerFactory<AccountCubit>(
     () => AccountCubit(accountRepository: sl<AccountRepository>()),
+  );
+
+  // Items
+  sl.registerLazySingleton<ItemRepository>(
+    () => ApiItemRepository(dio: sl<ApiClient>().dio),
+  );
+
+  sl.registerFactory<ItemCubit>(
+    () => ItemCubit(itemRepository: sl<ItemRepository>()),
+  );
+
+  // Contacts
+  sl.registerLazySingleton<ContactRepository>(
+    () => ApiContactRepository(dio: sl<ApiClient>().dio),
+  );
+
+  sl.registerFactory<ContactCubit>(
+    () => ContactCubit(contactRepository: sl<ContactRepository>()),
   );
 
   // Reconciliations

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../../../features/items/presentation/pages/items_list_page.dart';
 import '../../../features/banking/presentation/pages/banking_hub_page.dart';
 import '../../../features/reports/presentation/pages/reports_list_page.dart';
 import '../../../features/settings_hub/presentation/pages/settings_hub_page.dart';
 import '../../../features/dashboard/presentation/pages/dashboard_page.dart';
+import '../../../features/contacts/presentation/pages/contacts_page.dart';
 import '../components/app_drawer.dart';
 
 class MainLayout extends StatefulWidget {
@@ -18,6 +20,8 @@ class _MainLayoutState extends State<MainLayout> {
 
   final List<Widget> _pages = [
     const DashboardPage(),
+    const ItemsListPage(),
+    const ContactsListPage(),
     const BankingHubPage(),
     const ReportsListPage(),
     const SettingsHubPage(),
@@ -69,6 +73,16 @@ class _MainLayoutState extends State<MainLayout> {
             icon: Icon(Icons.speed_outlined),
             selectedIcon: Icon(Icons.speed),
             label: 'Dashboard',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.inventory_2_outlined),
+            selectedIcon: Icon(Icons.inventory_2),
+            label: 'Items',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.contacts_outlined),
+            selectedIcon: Icon(Icons.contacts),
+            label: 'Contacts',
           ),
           NavigationDestination(
             icon: Icon(Icons.account_balance_outlined),
