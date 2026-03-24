@@ -10,6 +10,7 @@ import '../../../features/categories/presentation/pages/categories_list_page.dar
 import '../../../features/currencies/presentation/pages/currencies_list_page.dart';
 import '../../../features/taxes/presentation/pages/taxes_list_page.dart';
 import '../../../features/contacts/presentation/pages/contacts_page.dart';
+import '../../../features/documents/presentation/pages/documents_list_page.dart';
 import '../../../features/translations/presentation/pages/translations_page.dart';
 import '../../../features/auth/presentation/pages/auth_check_page.dart';
 
@@ -96,6 +97,18 @@ class AppDrawer extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.push(context, MaterialPageRoute(
                   builder: (_) => const ContactsListPage(),
+                ));
+              },
+            ),
+
+            // Documents
+            _DrawerItem(
+              icon: Icons.description,
+              label: 'Documents',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (_) => const DocumentsListPage(),
                 ));
               },
             ),

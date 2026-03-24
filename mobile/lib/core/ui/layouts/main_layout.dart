@@ -5,6 +5,7 @@ import '../../../features/reports/presentation/pages/reports_list_page.dart';
 import '../../../features/settings_hub/presentation/pages/settings_hub_page.dart';
 import '../../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../../../features/contacts/presentation/pages/contacts_page.dart';
+import '../../../features/documents/presentation/pages/documents_list_page.dart';
 import '../components/app_drawer.dart';
 
 class MainLayout extends StatefulWidget {
@@ -25,6 +26,7 @@ class _MainLayoutState extends State<MainLayout> {
     const BankingHubPage(),
     const ReportsListPage(),
     const SettingsHubPage(),
+    const DocumentsListPage(),
   ];
 
   @override
@@ -80,6 +82,11 @@ class _MainLayoutState extends State<MainLayout> {
             icon: Icon(Icons.settings_outlined),
             selectedIcon: Icon(Icons.settings),
             label: 'Settings',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.description_outlined),
+            selectedIcon: Icon(Icons.description),
+            label: 'Documents',
           ),
         ],
       ),

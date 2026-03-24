@@ -13,6 +13,9 @@ import '../../logic/cubits/item_cubit.dart';
 import '../../features/contacts/domain/repositories/contact_repository.dart';
 import '../../features/contacts/data/repositories/contact_repository_impl.dart';
 import '../../logic/cubits/contact_cubit.dart';
+import '../../features/documents/domain/repositories/document_repository.dart';
+import '../../features/documents/data/repositories/document_repository_impl.dart';
+import '../../logic/cubits/document_cubit.dart';
 import '../../features/reconciliations/domain/repositories/reconciliation_repository.dart';
 import '../../features/reconciliations/data/repositories/reconciliation_repository.dart';
 import '../../logic/cubits/reconciliation_cubit.dart';
@@ -100,6 +103,15 @@ Future<void> init() async {
 
   sl.registerFactory<ContactCubit>(
     () => ContactCubit(contactRepository: sl<ContactRepository>()),
+  );
+
+  // Documents
+  sl.registerLazySingleton<DocumentRepository>(
+    () => ApiDocumentRepository(dio: sl<ApiClient>().dio),
+  );
+
+  sl.registerFactory<DocumentCubit>(
+    () => DocumentCubit(documentRepository: sl<DocumentRepository>()),
   );
 
   // Reconciliations
