@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Notifications\Banking;
-
 use App\Abstracts\Notification;
 use App\Models\Banking\Transaction as Model;
 use App\Models\Setting\EmailTemplate;
@@ -9,103 +7,49 @@ use App\Traits\Transactions;
 use Illuminate\Mail\Attachment;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\URL;
-
 class Transaction extends Notification
 {
     use Transactions;
-
-    /**
-     * The transaction model.
-     *
-     * @var object
-     */
     public $transaction;
-
-    /**
-     * The email template.
-     *
-     * @var EmailTemplate
-     */
     public $template;
-
-    /**
-     * Should attach pdf or not.
-     *
-     * @var bool
-     */
     public $attach_pdf;
-
-    /**
-     * List of transaction attachments to attach when sending the email.
-     *
-     * @var array
-     */
     public $attachments;
-
-    /**
-     * Create a notification instance.
-     */
     public function __construct(Model $transaction = null, string $template_alias = null, bool $attach_pdf = false, array $custom_mail = [], $attachments = [])
     {
         parent::__construct();
-
         $this->transaction = $transaction;
         $this->template = EmailTemplate::alias($template_alias)->first();
         $this->attach_pdf = $attach_pdf;
         $this->custom_mail = $custom_mail;
         $this->attachments = $attachments;
     }
-
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     */
     public function toMail($notifiable): MailMessage
     {
         if (! empty($this->custom_mail['to'])) {
             $notifiable->email = $this->custom_mail['to'];
         }
-
         $message = $this->initMailMessage();
-
         $func = is_local_storage() ? 'fromPath' : 'fromStorage';
-
-        // Attach the PDF file
         if ($this->attach_pdf) {
             $path = $this->storeTransactionPdfAndGetPath($this->transaction);
             $file = Attachment::$func($path)->withMime('application/pdf');
-
             $message->attach($file);
         }
-
-        // Attach selected attachments
         if (! empty($this->transaction->attachment)) {
             foreach ($this->transaction->attachment as $attachment) {
                 if (! in_array($attachment->id, $this->attachments)) {
                     continue;
                 }
-
                 $path = is_local_storage() ? $attachment->getAbsolutePath() : $attachment->getDiskPath();
                 $file = Attachment::$func($path)->withMime($attachment->mime_type);
-
                 $message->attach($file);
             }
         }
-
         return $message;
     }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function toArray($notifiable): array
     {
         $this->initArrayMessage();
-
         return [
             'template_alias' => $this->template->alias,
             'title' => trans('notifications.menu.' . $this->template->alias . '.title'),
@@ -116,7 +60,6 @@ class Transaction extends Notification
             'transaction_date' => company_date($this->transaction->paid_at),
         ];
     }
-
     public function getTags(): array
     {
         return [
@@ -133,7 +76,6 @@ class Transaction extends Notification
             '{company_address}',
         ];
     }
-
     public function getTagsReplacement(): array
     {
         $route_params = [
@@ -141,7 +83,6 @@ class Transaction extends Notification
             'transaction'   => $this->transaction->id,
             'payment'       => $this->transaction->id,
         ];
-
         return [
             money($this->transaction->amount, $this->transaction->currency_code),
             company_date($this->transaction->paid_at),

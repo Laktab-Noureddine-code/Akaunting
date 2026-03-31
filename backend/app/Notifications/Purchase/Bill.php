@@ -1,61 +1,28 @@
 <?php
-
 namespace App\Notifications\Purchase;
-
 use App\Abstracts\Notification;
 use App\Models\Setting\EmailTemplate;
 use App\Models\Document\Document;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Str;
-
 class Bill extends Notification
 {
-    /**
-     * The bill model.
-     *
-     * @var Document
-     */
     public $bill;
-
-    /**
-     * The email template.
-     *
-     * @var EmailTemplate
-     */
     public $template;
-
-    /**
-     * Create a notification instance.
-     */
     public function __construct(Document $bill = null, string $template_alias = null)
     {
         parent::__construct();
-
         $this->bill = $bill;
         $this->template = EmailTemplate::alias($template_alias)->first();
     }
-
-    /**
-     * Build the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     */
     public function toMail($notifiable): MailMessage
     {
         $message = $this->initMailMessage();
-
         return $message;
     }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     */
     public function toArray($notifiable): array
     {
         $this->initArrayMessage();
-
         return [
             'template_alias' => $this->template->alias,
             'title' => trans('notifications.menu.' . $this->template->alias . '.title'),
@@ -69,7 +36,6 @@ class Bill extends Notification
             'status' => $this->bill->status,
         ];
     }
-
     public function getTags(): array
     {
         return [
@@ -87,14 +53,12 @@ class Bill extends Notification
             '{company_address}',
         ];
     }
-
     public function getTagsReplacement(): array
     {
         $route_params = [
             'company_id'    => $this->bill->company_id,
             'bill'          => $this->bill->id,
         ];
-
         return [
             $this->bill->document_number,
             money($this->bill->amount, $this->bill->currency_code),

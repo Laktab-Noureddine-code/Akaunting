@@ -1,22 +1,13 @@
 <?php
-
 namespace App\Http\Resources\Banking;
-
 use App\Http\Resources\Banking\Account;
 use App\Http\Resources\Common\Contact;
 use App\Http\Resources\Setting\Category;
 use App\Http\Resources\Setting\Currency;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Banking\TransactionTax;
-
 class Transaction extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         return [

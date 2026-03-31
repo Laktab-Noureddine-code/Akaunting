@@ -1,22 +1,12 @@
 <?php
-
 namespace App\Listeners\Auth;
-
 use App\Events\Auth\LandingPageShowing as Event;
-
 class AddLandingPages
 {
-    /**
-     * Handle the event.
-     *
-     * @param Event $event
-     * @return void
-     */
     public function handle(Event $event)
     {
         $user = user();
         $role = ! empty($event->user->role) ? $event->user->role : false; 
-
         $routes = [
             'dashboard' => [
                 'permission' => 'read-common-dashboards',
@@ -79,14 +69,12 @@ class AddLandingPages
                 'translate'  => trans_choice('general.users', 2),
             ],
         ];
-
         foreach($routes as $key => $route) {
             if ($role && ! $role->hasPermission($route['permission'])) {
                 continue;
             } else if (! $user->can($route['permission'])) {
                 continue;
             }
-
             $event->user->landing_pages[$key] = $route['translate'];
         }
     }

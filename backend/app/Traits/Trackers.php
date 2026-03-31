@@ -1,9 +1,6 @@
 <?php
-
 namespace App\Traits;
-
 use Illuminate\Support\Str;
-
 trait Trackers
 {
     public static function getTrackerTags(): array
@@ -16,11 +13,9 @@ trait Trackers
             'route_name' => (string) static::getRouteName(),
         ];
     }
-
     public static function getAppType(): string
     {
         $hostname = gethostname();
-
         if (Str::contains($hostname, '-queue-')) {
             $app_type = 'queue';
         } elseif (Str::contains($hostname, '-cron-')) {
@@ -32,10 +27,8 @@ trait Trackers
         } else {
             $app_type = 'ui';
         }
-
         return $app_type;
     }
-
     public static function getRouteName(): ?string
     {
         return request()->route()?->getName();

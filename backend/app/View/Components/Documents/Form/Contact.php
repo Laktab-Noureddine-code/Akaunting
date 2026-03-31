@@ -1,48 +1,22 @@
 <?php
-
 namespace App\View\Components\Documents\Form;
-
 use App\Abstracts\View\Component;
 use App\Models\Common\Contact as Model;
 use Illuminate\Support\Str;
-
 class Contact extends Component
 {
     public $type;
-
     public $contact;
-
     public $placeholder;
-
     public $contacts;
-
     public $searchRoute;
-
     public $createRoute;
-
-    /** @var string */
     public $textAddContact;
-
-    /** @var string */
     public $textCreateNewContact;
-
-    /** @var string */
     public $textEditContact;
-
-    /** @var string */
     public $textContactInfo;
-
-    /** @var string */
     public $textChooseDifferentContact;
-
-    /** @var $error  */
     public $error;
-
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
     public function __construct(
         $type, $contact = false, $contacts = [], $searchRoute = '', $createRoute = '', string $error = '',
         $textAddContact = '', $textCreateNewContact = '', $textEditContact = '', $textContactInfo = '', $textChooseDifferentContact = ''
@@ -53,29 +27,20 @@ class Contact extends Component
         $this->searchRoute = $searchRoute;
         $this->createRoute = $createRoute;
         $this->error = ($error) ?: "form.errors.get('contact_id')" ;
-
         $this->textAddContact = $this->getTextAddContact($type, $textAddContact);
         $this->textCreateNewContact = $this->getTextCreateNewContact($type, $textCreateNewContact);
         $this->textEditContact = $this->getTextEditContact($type, $textEditContact);
         $this->textContactInfo = $this->getTextContactInfo($type, $textContactInfo);
         $this->textChooseDifferentContact = $this->getTextChooseDifferentContact($type, $textChooseDifferentContact);
     }
-
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|string
-     */
     public function render()
     {
         if (empty($this->contacts)) {
             $this->contacts = Model::{$this->type}()->enabled()->orderBy('name')->take(setting('default.select_limit'))->get();
-
             if (!empty($this->contact) && (!$this->contacts->contains('id', $contact->id))) {
                 $this->contacts->push($this->contact);
             }
         }
-
         if (empty($this->searchRoute)) {
             switch ($this->type) {
                 case 'customer':
@@ -86,7 +51,6 @@ class Contact extends Component
                     break;
             }
         }
-
         if (empty($this->createRoute)) {
             switch ($this->type) {
                 case 'customer':
@@ -97,19 +61,14 @@ class Contact extends Component
                     break;
             }
         }
-
-        #todo  3rd part apps
         $this->placeholder = trans('general.placeholder.contact_search', ['type' => trans_choice('general.' . Str::plural($this->type, 2), 1)]);
-
         return view('components.documents.form.contact');
     }
-
     protected function getTextAddContact($type, $textAddContact)
     {
         if (!empty($textAddContact)) {
             return $textAddContact;
         }
-
         switch ($type) {
             case 'bill':
             case 'expense':
@@ -126,16 +85,13 @@ class Contact extends Component
                 ];
                 break;
         }
-
         return $textAddContact;
     }
-
     protected function getTextCreateNewContact($type, $textCreateNewContact)
     {
         if (!empty($textCreateNewContact) && is_array($textCreateNewContact)) {
             return trans($textCreateNewContact[0], ['type' => trans_choice($textCreateNewContact[1], 1)]);
         }
-
         switch ($type) {
             case 'bill':
             case 'expense':
@@ -152,16 +108,13 @@ class Contact extends Component
                 ];
                 break;
         }
-
         return $textCreateNewContact;
     }
-
     protected function getTextEditContact($type, $textEditContact)
     {
         if (!empty($textEditContact)) {
             return $textEditContact;
         }
-
         switch ($type) {
             case 'bill':
             case 'expense':
@@ -178,16 +131,13 @@ class Contact extends Component
                 ];
                 break;
         }
-
         return $textEditContact;
     }
-
     protected function getTextContactInfo($type, $textContactInfo)
     {
         if (!empty($textContactInfo)) {
             return $textContactInfo;
         }
-
         switch ($type) {
             case 'bill':
             case 'expense':
@@ -198,16 +148,13 @@ class Contact extends Component
                 $textContactInfo = 'invoices.bill_to';
                 break;
         }
-
         return $textContactInfo;
     }
-
     protected function getTextChooseDifferentContact($type, $textChooseDifferentContact)
     {
         if (!empty($textChooseDifferentContact)) {
             return $textChooseDifferentContact;
         }
-
         switch ($type) {
             case 'bill':
             case 'expense':
@@ -224,7 +171,6 @@ class Contact extends Component
                 ];
                 break;
         }
-
         return $textChooseDifferentContact;
     }
 }

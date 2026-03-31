@@ -1,28 +1,17 @@
 <?php
 namespace Database\Seeds;
-
 use App\Abstracts\Model;
 use App\Traits\Permissions as Helper;
 use Illuminate\Database\Seeder;
-
 class Permissions extends Seeder
 {
     use Helper;
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         Model::unguard();
-
         $this->create();
-
         Model::reguard();
     }
-
     private function create()
     {
         $rows = [
@@ -168,7 +157,6 @@ class Permissions extends Seeder
                 'widgets-receivables' => 'r',
             ],
         ];
-
         $this->attachPermissionsByRoleNames($rows);
     }
 }

@@ -1,31 +1,6 @@
 <?php
-
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Invalid search string handling
-    |--------------------------------------------------------------------------
-    |
-    | - all-results: (Default) Silently fail with a query containing everything.
-    | - no-results: Silently fail with a query containing nothing.
-    | - exceptions: Throw an `InvalidSearchStringException`.
-    |
-    */
-
     'fail' => 'all-results',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default options
-    |--------------------------------------------------------------------------
-    |
-    | When options are missing from your models, this array will be used
-    | to fill the gaps. You can also define a set of options specific
-    | to a model, using its class name as a key, e.g. 'App\User'.
-    |
-    */
-
     'default' => [
         'keywords' => [
             'order_by' => 'sort',
@@ -38,57 +13,6 @@ return [
             'updated_at' => 'date',
         ],
     ],
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default operators
-    |--------------------------------------------------------------------------
-    |
-    | When options are missing from your models, this array will be used
-    | to fill the gaps. You can also define a set of options specific
-    | to a model, using its class name as a key, e.g. 'App\User'.
-    |
-    */
-
-    /*
-    'operators' => [
-        'equal' => [
-            'enabled'   => true,
-
-            'symbol'    => [
-                'sign'  => '=',
-                'icon'  => 'drag_handle',
-            ],
-
-            'text'      => trans(''),
-        ],
-
-        'not_equal' => [
-            'enabled'   => true,
-
-            'symbol'    => [
-                'sign'  => '=',
-                'img'   => 'drag_handle',
-            ],
-
-            'text'      => trans(''),
-        ],
-
-        'range' => [
-            'enabled'   => false,
-
-            'symbol'    => [
-                'sign'  => '><',
-                'class' => 'transform rotate-90',
-                'icon'  => 'height',
-            ],
-
-            'text'      => trans(''),
-        ],
-    ],
-    */
-
     App\Models\Auth\Permission::class => [
         'columns' => [
             'id',
@@ -99,7 +23,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Auth\Role::class => [
         'columns' => [
             'id',
@@ -110,7 +33,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Auth\User::class => [
         'columns' => [
             'id',
@@ -122,7 +44,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Banking\Account::class => [
         'columns' => [
             'id',
@@ -139,7 +60,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Banking\Reconciliation::class => [
         'columns' => [
             'id',
@@ -152,7 +72,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Banking\Transaction::class => [
         'columns' => [
             'id',
@@ -161,8 +80,6 @@ return [
                 'values' => [
                     'income' => 'general.incomes',
                     'expense' => 'general.expenses',
-                    //'income-transfer' => 'general.income_transfers',
-                    //'expense-transfer' => 'general.expense_transfers',
                 ],
             ],
             'account_id' => [
@@ -202,7 +119,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Banking\Transfer::class => [
         'columns' => [
             'id',
@@ -217,7 +133,6 @@ return [
             'created_at' => ['date' => true],
         ],
     ],
-
     App\Models\Common\Company::class => [
         'columns' => [
             'id',
@@ -228,7 +143,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Common\Dashboard::class => [
         'columns' => [
             'id',
@@ -238,7 +152,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Common\Item::class => [
         'columns' => [
             'id',
@@ -259,7 +172,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Common\Contact::class => [
         'columns' => [
             'id',
@@ -281,7 +193,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     'App\Models\Purchase\Vendor' => [
         'columns' => [
             'id',
@@ -303,7 +214,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     'App\Models\Sale\Customer' => [
         'columns' => [
             'id',
@@ -325,7 +235,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Document\Document::class => [
         'columns' => [
             'id',
@@ -365,7 +274,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     'App\Models\Purchase\Bill' => [
         'columns' => [
             'id',
@@ -420,7 +328,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     'App\Models\Sale\Invoice' => [
         'columns' => [
             'id',
@@ -476,7 +383,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Setting\Category::class => [
         'columns' => [
             'id',
@@ -495,7 +401,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Setting\Currency::class => [
         'columns' => [
             'id',
@@ -518,7 +423,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Setting\EmailTemplate::class => [
         'columns' => [
             'id',
@@ -528,7 +432,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Setting\Tax::class => [
         'columns' => [
             'id',
@@ -542,7 +445,6 @@ return [
             'updated_at' => ['date' => true],
         ],
     ],
-
     App\Models\Portal\Sale\Invoice::class => [
         'columns' => [
             'id',
@@ -564,7 +466,6 @@ return [
             'parent_id',
         ],
     ],
-
     App\Models\Portal\Banking\Transaction::class => [
         'columns' => [
             'id',
@@ -581,5 +482,4 @@ return [
             'parent_id',
         ],
     ],
-
 ];

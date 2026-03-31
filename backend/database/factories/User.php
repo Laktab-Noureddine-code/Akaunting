@@ -1,40 +1,18 @@
 <?php
-
 namespace Database\Factories;
-
 use App\Abstracts\Factory;
 use Illuminate\Support\Str;
-
 class User extends Factory
 {
-    /**
-    * The name of the factory's corresponding model.
-    *
-    * @var string
-    */
     protected $model = false;
-
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     public function __construct()
     {
         parent::__construct();
-
         $this->model = user_model_class();
     }
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition()
     {
-        $password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // password
-
+        $password = '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; 
         return [
             'name' => $this->faker->name,
             'email' => $this->faker->freeEmail,
@@ -49,24 +27,12 @@ class User extends Factory
             'created_from' => 'core::factory',
         ];
     }
-
-    /**
-     * Indicate that the model is enabled.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function enabled()
     {
         return $this->state([
             'enabled' => 1,
         ]);
     }
-
-    /**
-     * Indicate that the model is disabled.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function disabled()
     {
         return $this->state([

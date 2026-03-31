@@ -1,22 +1,16 @@
 <?php
-
 namespace App\BulkActions\Banking;
-
 use App\Abstracts\BulkAction;
 use App\Models\Banking\Reconciliation;
 use App\Models\Banking\Transaction;
-
 class Reconciliations extends BulkAction
 {
     public $model = Reconciliation::class;
-
     public $text = 'general.reconciliations';
-
     public $path = [
         'group' => 'banking',
         'type' => 'reconciliations',
     ];
-
     public $actions = [
         'reconcile'     => [
             'icon'          => 'published_with_changes',
@@ -37,16 +31,13 @@ class Reconciliations extends BulkAction
             'permission'    => 'delete-banking-reconciliations',
         ],
     ];
-
     public function reconcile($request)
     {
         $reconciliations = $this->getSelectedRecords($request);
-
         foreach ($reconciliations as $reconciliation) {
             \DB::transaction(function () use ($reconciliation) {
                 $reconciliation->reconciled = 1;
                 $reconciliation->save();
-
                 Transaction::where('account_id', $reconciliation->account_id)
                     ->isNotReconciled()
                     ->whereBetween('paid_at', [$reconciliation->started_at, $reconciliation->ended_at])->each(function ($item) {
@@ -56,16 +47,13 @@ class Reconciliations extends BulkAction
             });
         }
     }
-
     public function unreconcile($request)
     {
         $reconciliations = $this->getSelectedRecords($request);
-
         foreach ($reconciliations as $reconciliation) {
             \DB::transaction(function () use ($reconciliation) {
                 $reconciliation->reconciled = 0;
                 $reconciliation->save();
-
                 Transaction::where('account_id', $reconciliation->account_id)
                     ->isReconciled()
                     ->whereBetween('paid_at', [$reconciliation->started_at, $reconciliation->ended_at])->each(function ($item) {
@@ -75,15 +63,12 @@ class Reconciliations extends BulkAction
             });
         }
     }
-
     public function destroy($request)
     {
         $reconciliations = $this->getSelectedRecords($request);
-
         foreach ($reconciliations as $reconciliation) {
             \DB::transaction(function () use ($reconciliation) {
                 $reconciliation->delete();
-
                 Transaction::where('account_id', $reconciliation->account_id)
                     ->isReconciled()
                     ->whereBetween('paid_at', [$reconciliation->started_at, $reconciliation->ended_at])->each(function ($item) {

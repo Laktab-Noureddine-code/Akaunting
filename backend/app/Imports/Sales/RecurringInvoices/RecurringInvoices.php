@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Imports\Sales\RecurringInvoices;
-
 use App\Abstracts\ImportMultipleSheets;
 use App\Imports\Sales\RecurringInvoices\Sheets\Recurring;
 use App\Imports\Sales\RecurringInvoices\Sheets\RecurringInvoices as Base;
@@ -9,7 +7,6 @@ use App\Imports\Sales\RecurringInvoices\Sheets\RecurringInvoiceItems;
 use App\Imports\Sales\RecurringInvoices\Sheets\RecurringInvoiceItemTaxes;
 use App\Imports\Sales\RecurringInvoices\Sheets\RecurringInvoiceHistories;
 use App\Imports\Sales\RecurringInvoices\Sheets\RecurringInvoiceTotals;
-
 class RecurringInvoices extends ImportMultipleSheets
 {
     public function sheets(): array

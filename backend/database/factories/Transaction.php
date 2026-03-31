@@ -1,44 +1,21 @@
 <?php
-
 namespace Database\Factories;
-
 use App\Abstracts\Factory;
 use App\Interfaces\Utility\TransactionNumber;
 use App\Models\Banking\Transaction as Model;
 use App\Models\Common\Contact;
 use App\Traits\Transactions;
 use App\Utilities\Date;
-
 class Transaction extends Factory
 {
     use Transactions;
-
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = Model::class;
-
-    /**
-     * The type of the model.
-     *
-     * @var string
-     */
     protected $type = 'income';
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition()
     {
         $types = array_merge($this->getIncomeTypes(), $this->getExpenseTypes());
         $this->type = $this->faker->randomElement($types);
-
         $category_type = in_array($this->type, $this->getIncomeTypes()) ? 'income' : 'expense';
-
         return [
             'company_id' => $this->company->id,
             'type' => $this->type,
@@ -55,23 +32,15 @@ class Transaction extends Factory
             'created_from' => 'core::factory',
         ];
     }
-
-    /**
-     * Indicate that the model type is income.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function income()
     {
         return $this->state(function (array $attributes): array {
             $contacts = Contact::customer()->enabled()->get();
-
             if ($contacts->count()) {
                 $contact = $contacts->random(1)->first();
             } else {
                 $contact = Contact::factory()->customer()->enabled()->create();
             }
-
             return [
                 'type' => 'income',
                 'number' => $this->getNumber('income', '', $contact),
@@ -80,23 +49,15 @@ class Transaction extends Factory
             ];
         });
     }
-
-    /**
-     * Indicate that the model type is expense.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function expense()
     {
         return $this->state(function (array $attributes): array {
             $contacts = Contact::vendor()->enabled()->get();
-
             if ($contacts->count()) {
                 $contact = $contacts->random(1)->first();
             } else {
                 $contact = Contact::factory()->vendor()->enabled()->create();
             }
-
             return [
                 'type' => 'expense',
                 'number' => $this->getNumber('expense', '', $contact),
@@ -105,16 +66,9 @@ class Transaction extends Factory
             ];
         });
     }
-
-    /**
-     * Indicate that the model is recurring.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function recurring()
     {
         $type = $this->getRawAttribute('type') . '-recurring';
-
         return $this->state([
             'type' => $type,
             'number' => $this->getNumber($type, '-recurring'),
@@ -129,19 +83,11 @@ class Transaction extends Factory
             'real_type' => $this->getRawAttribute('type'),
         ]);
     }
-
-    /**
-     * Get transaction number
-     *
-     */
     public function getNumber($type, $suffix = '', $contact = null)
     {
         $utility = app(TransactionNumber::class);
-
         $number = $utility->getNextNumber($type, $suffix, $contact);
-
         $utility->increaseNextNumber($type, $suffix ,$contact);
-
         return $number;
     }
 }

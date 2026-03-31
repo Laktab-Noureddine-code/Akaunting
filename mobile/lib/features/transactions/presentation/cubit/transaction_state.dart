@@ -17,7 +17,7 @@ class TransactionLoaded extends TransactionState {
 
 class TransactionDetailLoaded extends TransactionState {
   final TransactionModel transaction;
-  
+
   const TransactionDetailLoaded(this.transaction);
 }
 

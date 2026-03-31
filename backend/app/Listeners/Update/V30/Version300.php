@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Listeners\Update\V30;
-
 use App\Abstracts\Listeners\Update as Listener;
 use App\Events\Install\UpdateFinished as Event;
 use App\Jobs\Common\CreateWidget;
@@ -22,93 +20,56 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Throwable;
-
 class Version300 extends Listener
 {
     use Jobs, Permissions, Transactions;
-
     const ALIAS = 'core';
-
     const VERSION = '3.0.0';
-
-    /**
-     * Handle the event.
-     *
-     * @param  $event
-     * @return void
-     */
     public function handle(Event $event)
     {
         if ($this->skipThisUpdate($event)) {
             return;
         }
-
         Log::channel('stdout')->info('Starting the Akaunting 3.0 update...');
-
         $this->updateDatabase();
-
         $this->deleteOldWidgets();
-
         $this->updateCompanies();
-
         $this->updatePermissions();
-
         $this->deleteOldFiles();
-
         $this->clearNotifications();
-
         Log::channel('stdout')->info('Akaunting 3.0 update finished.');
     }
-
     public function updateDatabase()
     {
         Log::channel('stdout')->info('Updating database...');
-
         DB::table('migrations')->insert([
             'id' => DB::table('migrations')->max('id') + 1,
             'migration' => '2019_11_16_000000_core_v2',
             'batch' => DB::table('migrations')->max('batch') + 1,
         ]);
-
         Artisan::call('migrate', ['--force' => true]);
-
         Log::channel('stdout')->info('Database updated.');
     }
-
     public function updateCompanies()
     {
         Log::channel('stdout')->info('Updating companies...');
-
         $company_id = company_id();
-
         $companies = Company::cursor();
-
         foreach ($companies as $company) {
             Log::channel('stdout')->info('Updating company:' . $company->id);
-
             $company->makeCurrent();
-
             $this->createNewWidgets();
-
             $this->updateEmailTemplates();
-
             $this->updateRecurables();
-
             $this->updateTransactions();
-
             Log::channel('stdout')->info('Company updated:' . $company->id);
         }
-
         company($company_id)->makeCurrent();
-
         Log::channel('stdout')->info('Companies updated.');
     }
-
     public function deleteOldWidgets()
     {
         Log::channel('stdout')->info('Deleting old widgets...');
-
-        // Delete old widgets
         $old_widgets = [
             'App\\Widgets\\TotalIncome',
             'App\\Widgets\\TotalExpenses',
@@ -120,19 +81,14 @@ class Version300 extends Listener
             'App\\Widgets\\LatestIncome',
             'App\\Widgets\\LatestExpenses',
         ];
-
         DB::transaction(function () use ($old_widgets) {
             DB::table('widgets')->whereIn('class', $old_widgets)->delete();
         });
-
         Log::channel('stdout')->info('Old widgets deleted.');
     }
-
     public function createNewWidgets()
     {
         Log::channel('stdout')->info('Creating new widgets...');
-
-        // Create new widgets
         $new_widgets = [
             'App\Widgets\Receivables',
             'App\Widgets\Payables',
@@ -142,15 +98,11 @@ class Version300 extends Listener
             'App\Widgets\AccountBalance',
             'App\Widgets\BankFeeds',
         ];
-
         Log::channel('stdout')->info('Creating new widgets...');
-
         Dashboard::whereDoesntHave('widgets')->each(function($dashboard) use ($new_widgets) {
             $sort = 1;
-
             foreach ($new_widgets as $class_name) {
                 $class = new $class_name();
-
                 $this->dispatch(new CreateWidget([
                     'company_id'    => $dashboard->company_id,
                     'dashboard_id'  => $dashboard->id,
@@ -159,29 +111,22 @@ class Version300 extends Listener
                     'sort'          => $sort,
                     'settings'      => $class->getDefaultSettings(),
                 ]));
-
                 $sort++;
             }
         });
-
         Log::channel('stdout')->info('New widgets created.');
     }
-
     public function updateEmailTemplates()
     {
         Log::channel('stdout')->info('Updating/Creating email templates...');
-
         $payment_received_model = EmailTemplate::alias('revenue_new_customer')->first();
-
         $payment_received_request = [
             'company_id'    => company_id(),
             'alias'         => 'payment_received_customer',
             'class'         => 'App\Notifications\Banking\Transaction',
             'name'          => 'settings.email.templates.payment_received_customer',
         ];
-
         Log::channel('stdout')->info('Updating old email templates...');
-
         if (!empty($payment_received_model)) {
             $this->dispatch(new UpdateEmailTemplate($payment_received_model, array_merge($payment_received_request, [
                 'subject'   => $payment_received_model->subject,
@@ -194,9 +139,7 @@ class Version300 extends Listener
                 'created_from'  => 'core::seed',
             ])));
         }
-
         Log::channel('stdout')->info('Creating new email templates...');
-
         $this->dispatch(new CreateEmailTemplate([
             'company_id'    => company_id(),
             'alias'         => 'invoice_view_admin',
@@ -206,7 +149,6 @@ class Version300 extends Listener
             'body'          => trans('email_templates.invoice_view_admin.body'),
             'created_from'  => 'core::seed',
         ]));
-
         $this->dispatch(new CreateEmailTemplate([
             'company_id'    => company_id(),
             'alias'         => 'payment_made_vendor',
@@ -216,20 +158,14 @@ class Version300 extends Listener
             'body'          => trans('email_templates.payment_made_vendor.body'),
             'created_from'  => 'core::seed',
         ]));
-
         Log::channel('stdout')->info('Email templates updated/created.');
     }
-
     public function updateRecurables()
     {
         Log::channel('stdout')->info('Updating recurring...');
-
         $recurrings = Recurring::with('recurable')->cursor();
-
         foreach ($recurrings as $recurring) {
-            // Document or Transaction
             $model = $recurring->recurable;
-
             if ($model instanceof Document) {
                 $cloneable_relations = ['items', 'totals'];
                 $number_field = 'document_number';
@@ -237,90 +173,64 @@ class Version300 extends Listener
                 $cloneable_relations = [];
                 $number_field = 'number';
             }
-
             $model->cloneable_relations = $cloneable_relations;
-
-            // Create the recurring template
             $clone = $model->duplicate();
             $clone->type = $clone->type . '-recurring';
             $clone->$number_field = $this->getNextTransactionNumber($clone->type, '-recurring');
             $clone->saveQuietly();
-
             $this->increaseNextTransactionNumber($clone->type, '-recurring');
-
-            // Update the recurring table
             $recurring->recurable_id = $clone->id;
             $recurring->saveQuietly();
-
-            // Set the new recurring template as parent for the original model
             $model->parent_id = $clone->id;
             $model->saveQuietly();
-
-            // Set the new recurring template as parent for child models
             DB::table($model->getTable())->where('parent_id', $model->id)->update([
                 'parent_id' => $clone->id,
                 'created_from' => 'core::recurring',
             ]);
         }
-
         Log::channel('stdout')->info('Recurring updated.');
     }
-
     public function updateTransactions()
     {
         Log::channel('stdout')->info('Updating transactions...');
-
         $transactions = Transaction::isNotRecurring()->cursor();
-
         $number = 1;
         $transaction_number = $this->getTransactionNumber($number);
-
         foreach ($transactions as $transaction) {
             $transaction->number = $transaction_number;
             $transaction->saveQuietly();
-
             $number++;
             $transaction_number = $this->getTransactionNumber($number);
         }
-
         $this->saveNextTransactionNumber($number);
-
         Log::channel('stdout')->info('Transactions updated.');
     }
-
     public function clearNotifications()
     {
         try {
             $users = User::all();
-
             foreach ($users as $user) {
                $notifications = $user->unreadNotifications;
-
                 foreach ($notifications as $notification) {
                     $notification->markAsRead();
                 }
             }
         } catch (\Exception $e) {}
     }
-
     public function getTransactionNumber($number): string
     {
         $prefix = setting('transaction.number_prefix');
         $digit  = setting('transaction.number_digit');
-
         return $prefix . str_pad($number, $digit, '0', STR_PAD_LEFT);
     }
-
     public function saveNextTransactionNumber($next): void
     {
         setting(['transaction.number_next' => $next]);
         setting()->save();
     }
-
     public function updatePermissions()
     {
         Log::channel('stdout')->info('Updating permissions...');
-
         $rows = [
             'accountant' => [
                 'admin-panel' => 'r',
@@ -346,13 +256,8 @@ class Version300 extends Listener
                 'modules-tiles' => 'r',
             ],
         ];
-
         Log::channel('stdout')->info('Attaching new permissions...');
-
-        // c=create, r=read, u=update, d=delete
         $this->attachPermissionsByRoleNames($rows);
-
-        // c=create, r=read, u=update, d=delete
         $this->attachPermissionsToAdminRoles([
             'settings-email-templates' => 'r,u',
             'settings-company' => 'u',
@@ -366,10 +271,7 @@ class Version300 extends Listener
             'widgets-profit-loss' => 'r',
             'widgets-receivables' => 'r',
         ]);
-
         Log::channel('stdout')->info('Dettaching old permissions...');
-
-        // c=create, r=read, u=update, d=delete
         $this->detachPermissionsFromAdminRoles([
             'auth-permissions' => 'c,r,u,d',
             'auth-roles' => 'c,r,u,d',
@@ -385,14 +287,11 @@ class Version300 extends Listener
             'widgets-total-income' => 'r',
             'widgets-total-profit' => 'r',
         ]);
-
         Log::channel('stdout')->info('Permissions updated.');
     }
-
     public function deleteOldFiles()
     {
         Log::channel('stdout')->info('Deleting old files and folders...');
-
         $files = [
             'app/Abstracts/View/Components/Document.php',
             'app/Abstracts/View/Components/DocumentForm.php',
@@ -602,7 +501,6 @@ class Version300 extends Listener
             'resources/views/widgets/total_income.blade.php',
             'resources/views/widgets/total_profit.blade.php',
         ];
-
         $directories = [
             'app/Listeners/Update/V20',
             'app/Listeners/Update/V21',
@@ -638,19 +536,14 @@ class Version300 extends Listener
             'resources/views/partials/reports',
             'resources/views/partials/widgets',
         ];
-
         Log::channel('stdout')->info('Deleting old files...');
-
         foreach ($files as $file) {
             File::delete(base_path($file));
         }
-
         Log::channel('stdout')->info('Deleting old folders...');
-
         foreach ($directories as $directory) {
             File::deleteDirectory(base_path($directory));
         }
-
         Log::channel('stdout')->info('Old files and folders deleted.');
     }
 }

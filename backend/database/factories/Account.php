@@ -1,28 +1,13 @@
 <?php
-
 namespace Database\Factories;
-
 use App\Abstracts\Factory;
 use App\Models\Banking\Account as Model;
-
 class Account extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = Model::class;
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition()
     {
         $types = ['bank', 'credit_card'];
-
         return [
             'company_id' => $this->company->id,
             'type' => $this->faker->randomElement($types),
@@ -37,36 +22,18 @@ class Account extends Factory
             'created_from' => 'core::factory',
         ];
     }
-
-    /**
-     * Indicate that the model is enabled.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function enabled()
     {
         return $this->state([
             'enabled' => 1,
         ]);
     }
-
-    /**
-     * Indicate that the model is disabled.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function disabled()
     {
         return $this->state([
             'enabled' => 0,
         ]);
     }
-
-    /**
-     * Indicate that the default currency is used.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function default_currency()
     {
         return $this->state([

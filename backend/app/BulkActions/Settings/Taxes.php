@@ -1,23 +1,17 @@
 <?php
-
 namespace App\BulkActions\Settings;
-
 use App\Abstracts\BulkAction;
 use App\Jobs\Setting\DeleteTax;
 use App\Jobs\Setting\UpdateTax;
 use App\Models\Setting\Tax;
-
 class Taxes extends BulkAction
 {
     public $model = Tax::class;
-
     public $text = 'general.taxes';
-
     public $path = [
         'group' => 'settings',
         'type' => 'taxes',
     ];
-
     public $actions = [
         'edit' => [
             'icon'          => 'edit',
@@ -46,11 +40,9 @@ class Taxes extends BulkAction
             'permission'    => 'delete-settings-taxes',
         ],
     ];
-
     public function edit($request)
     {
         $selected = $this->getSelectedInput($request);
-
         $types = [
             'fixed' => trans('taxes.fixed'),
             'normal' => trans('taxes.normal'),
@@ -58,20 +50,15 @@ class Taxes extends BulkAction
             'withholding' => trans('taxes.withholding'),
             'compound' => trans('taxes.compound'),
         ];
-
         $disable_options = [];
-
         if ($compound = Tax::compound()->first()) {
             $disable_options = ['compound'];
         }
-
         return $this->response('bulk-actions.settings.taxes.edit', compact('selected', 'types', 'disable_options'));
     }
-
     public function update($request)
     {
         $taxes = $this->getSelectedRecords($request);
-
         foreach ($taxes as $tax) {
             try {
                 $this->dispatch(new UpdateTax($tax, $this->getUpdateRequest($request)));
@@ -80,11 +67,9 @@ class Taxes extends BulkAction
             }
         }
     }
-
     public function disable($request)
     {
         $taxes = $this->getSelectedRecords($request);
-
         foreach ($taxes as $tax) {
             try {
                 $this->dispatch(new UpdateTax($tax, $request->merge(['enabled' => 0])));
@@ -93,11 +78,9 @@ class Taxes extends BulkAction
             }
         }
     }
-
     public function destroy($request)
     {
         $taxes = $this->getSelectedRecords($request);
-
         foreach ($taxes as $tax) {
             try {
                 $this->dispatch(new DeleteTax($tax));

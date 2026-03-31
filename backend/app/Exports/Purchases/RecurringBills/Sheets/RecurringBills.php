@@ -1,36 +1,28 @@
 <?php
-
 namespace App\Exports\Purchases\RecurringBills\Sheets;
-
 use App\Abstracts\Export;
 use App\Models\Document\Document as Model;
 use App\Interfaces\Export\WithParentSheet;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-
 class RecurringBills extends Export implements WithColumnFormatting, WithParentSheet
 {
     public function collection()
     {
         return Model::with('category')->billRecurring()->collectForExport($this->ids, ['document_number' => 'desc']);
     }
-
     public function map($model): array
     {
         $country = null;
-
         if ($model->contact_country && array_key_exists($model->contact_country, trans('countries'))) {
             $country = trans('countries.' . $model->contact_country);
         }
-
         $model->category_name = $model->category->name;
         $model->bill_number = $model->document_number;
         $model->billed_at = $model->issued_at;
         $model->contact_country = $country;
-
         return parent::map($model);
     }
-
     public function fields(): array
     {
         return [
@@ -61,7 +53,6 @@ class RecurringBills extends Export implements WithColumnFormatting, WithParentS
             'color',
         ];
     }
-
     public function columnFormats(): array
     {
         return [

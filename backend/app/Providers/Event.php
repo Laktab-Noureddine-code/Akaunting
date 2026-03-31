@@ -1,16 +1,8 @@
 <?php
-
 namespace App\Providers;
-
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as Provider;
-
 class Event extends Provider
 {
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array
-     */
     protected $listen = [
         'App\Events\Install\UpdateFinished' => [
             'App\Listeners\Update\CreateModuleUpdatedHistory',
@@ -43,7 +35,6 @@ class Event extends Provider
         'Illuminate\Auth\Events\Logout' => [
             'App\Listeners\Auth\Logout',
         ],
-        //'Illuminate\Console\Events\ScheduledTaskStarting' => [
         'Illuminate\Console\Events\CommandStarting' => [
             'App\Listeners\Common\SkipScheduleInReadOnlyMode',
         ],
@@ -130,12 +121,6 @@ class Event extends Provider
             'App\Listeners\Email\SendInvalidEmailNotification',
         ],
     ];
-
-    /**
-     * The subscriber classes to register.
-     *
-     * @var array
-     */
     protected $subscribe = [
         'App\Listeners\Common\ClearPlansCache',
         'App\Listeners\Module\ClearCache',

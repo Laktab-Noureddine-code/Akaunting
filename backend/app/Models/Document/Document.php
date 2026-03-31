@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models\Document;
-
 use App\Abstracts\Model;
 use App\Interfaces\Utility\DocumentNumber;
 use App\Models\Common\Media as MediaModel;
@@ -18,20 +16,15 @@ use Database\Factories\Document as DocumentFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
 class Document extends Model
 {
     use HasFactory, Documents, Cloneable, Contacts, Currencies, DateTime, Media, Recurring;
-
     public const INVOICE_TYPE = 'invoice';
     public const INVOICE_RECURRING_TYPE = 'invoice-recurring';
     public const BILL_TYPE = 'bill';
     public const BILL_RECURRING_TYPE = 'bill-recurring';
-
     protected $table = 'documents';
-
     protected $appends = ['attachment', 'amount_without_tax', 'discount', 'paid', 'received_at', 'status_label', 'sent_at', 'reconciled', 'contact_location'];
-
     protected $fillable = [
         'company_id',
         'type',
@@ -66,12 +59,6 @@ class Document extends Model
         'created_from',
         'created_by',
     ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array
-     */
     protected $casts = [
         'issued_at'     => 'datetime',
         'due_at'        => 'datetime',
@@ -79,10 +66,6 @@ class Document extends Model
         'currency_rate' => 'double',
         'deleted_at'    => 'datetime',
     ];
-
-    /**
-     * @var array
-     */
     public $sortable = [
         'issued_at',
         'due_at',
@@ -94,57 +77,39 @@ class Document extends Model
         'category.name',
         'recurring.status',
     ];
-
-    /**
-     * @var array
-     */
     public $cloneable_relations = ['items', 'recurring', 'totals'];
-
-    /**
-     * The "booted" method of the model.
-     *
-     * @return void
-     */
     protected static function booted()
     {
         static::addGlobalScope(new Scope);
     }
-
     public function category()
     {
         return $this->belongsTo('App\Models\Setting\Category')->withoutGlobalScope('App\Scopes\Category')->withDefault(['name' => trans('general.na')]);
     }
-
     public function children()
     {
         return $this->hasMany('App\Models\Document\Document', 'parent_id');
     }
-
     public function contact()
     {
         return $this->belongsTo('App\Models\Common\Contact')->withDefault(['name' => trans('general.na')]);
     }
-
     public function currency()
     {
         return $this->belongsTo('App\Models\Setting\Currency', 'currency_code', 'code');
     }
-
     public function items()
     {
         return $this->hasMany('App\Models\Document\DocumentItem', 'document_id')->with('taxes');
     }
-
     public function item_taxes()
     {
         return $this->hasMany('App\Models\Document\DocumentItemTax', 'document_id');
     }
-
     public function histories()
     {
         return $this->hasMany('App\Models\Document\DocumentHistory', 'document_id');
     }
-
     public function last_history()
     {
         return $this->hasOne('App\Models\Document\DocumentHistory', 'document_id')->latest()->withDefault([
@@ -152,87 +117,70 @@ class Document extends Model
             'created_at' => $this->created_at
         ]);
     }
-
     public function parent()
     {
         return $this->belongsTo('App\Models\Document\Document', 'parent_id')->isRecurring();
     }
-
     public function payments()
     {
         return $this->transactions();
     }
-
     public function recurring()
     {
         return $this->morphOne('App\Models\Common\Recurring', 'recurable');
     }
-
     public function totals()
     {
         return $this->hasMany('App\Models\Document\DocumentTotal', 'document_id');
     }
-
     public function transactions()
     {
         return $this->hasMany('App\Models\Banking\Transaction', 'document_id');
     }
-
     public function totals_sorted()
     {
         return $this->totals()->orderBy('sort_order');
     }
-
     public function scopeLatest(Builder $query): Builder
     {
         return $query->orderBy('issued_at', 'desc');
     }
-
     public function scopeNumber(Builder $query, string $number): Builder
     {
         return $query->where('document_number', '=', $number);
     }
-
     public function scopeDue(Builder $query, $date): Builder
     {
         return $query->whereDate('due_at', '=', $date);
     }
-
     public function scopeStatus(Builder $query, string $status): Builder
     {
         return $query->where($this->qualifyColumn('status'), '=', $status);
     }
-
     public function scopeAccrued(Builder $query): Builder
     {
         return $query->whereNotIn($this->qualifyColumn('status'), ['draft', 'cancelled']);
     }
-
     public function scopePaid(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('status'), '=', 'paid');
     }
-
     public function scopeNotPaid(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('status'), '<>', 'paid');
     }
-
     public function scopeFuture(Builder $query): Builder
     {
         return $query->whereIn($this->qualifyColumn('status'), $this->getDocumentStatusesForFuture());
     }
-
     public function scopeType(Builder $query, string $type): Builder
     {
         return $query->where($this->qualifyColumn('type'), '=', $type);
     }
-
     public function scopeInvoice(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('type'), '=', self::INVOICE_TYPE);
     }
-
     public function scopeInvoiceRecurring(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('type'), '=', self::INVOICE_RECURRING_TYPE)
@@ -240,12 +188,10 @@ class Document extends Model
                         $query->whereNull('deleted_at');
                     });
     }
-
     public function scopeBill(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('type'), '=', self::BILL_TYPE);
     }
-
     public function scopeBillRecurring(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('type'), '=', self::BILL_RECURRING_TYPE)
@@ -253,13 +199,6 @@ class Document extends Model
                         $query->whereNull('deleted_at');
                     });
     }
-
-    /**
-     * @inheritDoc
-     *
-     * @param  Document $src
-     * @param  boolean $child
-     */
     public function onCloning($src, $child = null)
     {
         if (app()->has(\App\Console\Commands\RecurringCheck::class)) {
@@ -267,11 +206,9 @@ class Document extends Model
         } else {
             $type = $src->type;
         }
-
         $this->status          = 'draft';
         $this->document_number = app(DocumentNumber::class)->getNextNumber($type, $src->contact);
     }
-
     public function getSentAtAttribute(string $value = null)
     {
         if ($this->relationLoaded('histories')) {
@@ -279,10 +216,8 @@ class Document extends Model
         } else {
             $sent = $this->histories()->where('document_histories.status', 'sent')->first();
         }
-
         return $sent->created_at ?? null;
     }
-
     public function getReceivedAtAttribute(string $value = null)
     {
         if ($this->relationLoaded('histories')) {
@@ -290,28 +225,18 @@ class Document extends Model
         } else {
             $received = $this->histories()->where('document_histories.status', 'received')->first();
         }
-
         return $received->created_at ?? null;
     }
-
-    /**
-     * Get the current balance.
-     *
-     * @return string
-     */
     public function getAttachmentAttribute($value = null)
     {
         $has_attachment = $this->hasMedia('attachment');
-
         if (! empty($value) && ! $has_attachment) {
             return $value;
         } elseif (! $has_attachment) {
             return false;
         }
-
         return $this->getMedia('attachment')->all();
     }
-
     public function delete_attachment()
     {
         if ($attachments = $this->attachment) {
@@ -320,152 +245,87 @@ class Document extends Model
             }
         }
     }
-
-    /**
-     * Get the discount percentage.
-     *
-     * @return string
-     */
     public function getDiscountRateAttribute($value)
     {
         return $value ?? 0;
     }
-
-    /**
-     * Get the discount percentage.
-     *
-     * @return string
-     */
     public function getDiscountTypeAttribute($value)
     {
         return $value ?? 'percentage';
     }
-
-    /**
-     * Get the discount percentage.
-     *
-     * @return string
-     */
     public function getDiscountAttribute()
     {
         $percent = 0;
-
         $discount = $this->totals->where('code', 'discount')->makeHidden('title')->pluck('amount')->first();
-
         if ($discount) {
             $sub_total = $this->totals->where('code', 'sub_total')->makeHidden('title')->pluck('amount')->first();
-
             if ($sub_total && $sub_total > 0) {
                 $percent = number_format((($discount * 100) / $sub_total), 0);
             } else {
                 $percent = 0;
             }
         }
-
         return $percent;
     }
-
-    /**
-     * Get the paid amount.
-     *
-     * @return string
-     */
     public function getPaidAttribute()
     {
         if (empty($this->amount)) {
             return false;
         }
-
         if ($this->status == 'paid' ) {
             return $this->amount;
         }
-
         $paid = 0;
-
         $code = $this->currency_code;
         $rate = $this->currency_rate;
         $precision = currency($code)->getPrecision();
-
-        // Lazy eager load transactions if not already loaded to prevent N+1 queries
         if (!$this->relationLoaded('transactions')) {
             $this->load('transactions');
         }
-
         if ($this->transactions->count()) {
             foreach ($this->transactions as $transaction) {
                 $amount = $transaction->amount;
-
                 if ($code != $transaction->currency_code) {
                     $amount = $this->convertBetween($amount, $transaction->currency_code, $transaction->currency_rate, $code, $rate);
                 }
-
                 $paid += $amount;
             }
         }
-
         return round($paid, $precision);
     }
-
-    /**
-     * Get the reconcilation status.
-     *
-     * @return integer
-     */
     public function getReconciledAttribute()
     {
         if (empty($this->amount)) {
             return 0;
         }
-
         $reconciled = $reconciled_amount = 0;
-
         $code = $this->currency_code;
         $rate = $this->currency_rate;
         $precision = currency($code)->getPrecision();
-
-        // Lazy eager load transactions if not already loaded to prevent N+1 queries
         if (!$this->relationLoaded('transactions')) {
             $this->load('transactions');
         }
-
         if ($this->transactions->count()) {
             foreach ($this->transactions as $transaction) {
                 $amount = $transaction->amount;
-
                 if ($code != $transaction->currency_code) {
                     $amount = $this->convertBetween($amount, $transaction->currency_code, $transaction->currency_rate, $code, $rate);
                 }
-
                 if ($transaction->reconciled) {
                     $reconciled_amount += $amount;
                 }
             }
         }
-
         if (bccomp(round($this->amount, $precision), round($reconciled_amount, $precision), $precision) === 0) {
             $reconciled = 1;
         }
-
         return $reconciled;
     }
-
-    /**
-     * Get the not paid amount.
-     *
-     * @return string
-     */
     public function getAmountDueAttribute()
     {
         $precision = currency($this->currency_code)->getPrecision();
-
         return round($this->amount - $this->paid, $precision);
     }
-
-    /**
-     * Get the status label.
-     *
-     * @return string
-     */
     public function getStatusLabelAttribute()
     {
         return match($this->status) {
@@ -478,12 +338,6 @@ class Document extends Model
             default     => 'status-draft',
         };
     }
-
-    /**
-     * Get the recurring status label.
-     *
-     * @return string
-     */
     public function getRecurringStatusLabelAttribute()
     {
         return match($this->recurring->status) {
@@ -492,61 +346,39 @@ class Document extends Model
             default     => 'status-success',
         };
     }
-
-    /**
-     * Get the amount without tax.
-     *
-     * @return string
-     */
     public function getAmountWithoutTaxAttribute()
     {
         $amount = $this->amount;
-
         $this->totals->where('code', 'tax')->each(function ($total) use(&$amount) {
             $tax = Tax::name($total->name)->first();
-
             if (!empty($tax) && ($tax->type == 'withholding')) {
                 return;
             }
-
             $amount -= $total->amount;
         });
-
         return $amount;
     }
-
     public function getTemplatePathAttribute($value = null)
     {
         return $value ?: 'sales.invoices.print_' . setting('invoice.template');
     }
-
     public function getContactLocationAttribute()
     {
         if ($this->contact_country && array_key_exists($this->contact_country, trans('countries'))) {
             $country = trans('countries.' . $this->contact_country);
         }
-
         return $this->getFormattedAddress($this->contact_city, $country ?? null, $this->contact_state, $this->contact_zip_code);
     }
-
-    /**
-     * Get the line actions.
-     *
-     * @return array
-     */
     public function getLineActionsAttribute()
     {
         $actions = [];
-
         $group = config('type.document.' . $this->type . '.group');
         $prefix = config('type.document.' . $this->type . '.route.prefix');
         $permission_prefix = config('type.document.' . $this->type . '.permission.prefix');
         $translation_prefix = config('type.document.' . $this->type . '.translation.prefix');
-
         if (empty($prefix)) {
             return $actions;
         }
-
         if (app('mobile-detect')->isMobile()) {
             try {
                 $actions[] = [
@@ -560,7 +392,6 @@ class Document extends Model
                 ];
             } catch (\Exception $e) {}
         }
-
         try {
             if (! $this->reconciled) {
                 $actions[] = [
@@ -574,7 +405,6 @@ class Document extends Model
                 ];
             }
         } catch (\Exception $e) {}
-
         try {
             $actions[] = [
                 'title' => trans('general.duplicate'),
@@ -586,7 +416,6 @@ class Document extends Model
                 ],
             ];
         } catch (\Exception $e) {}
-
         if (
             $this->status != 'paid'
             && ! str_contains($this->type, 'recurring')
@@ -619,7 +448,6 @@ class Document extends Model
                 }
             } catch (\Exception $e) {}
         }
-
         try {
             $actions[] = [
                 'title' => trans('general.print'),
@@ -632,7 +460,6 @@ class Document extends Model
                 ],
             ];
         } catch (\Exception $e) {}
-
         try {
             $actions[] = [
                 'title' => trans('general.download_pdf'),
@@ -645,13 +472,11 @@ class Document extends Model
                 ],
             ];
         } catch (\Exception $e) {}
-
         if (! str_contains($this->type, 'recurring')) {
             if ($this->status != 'cancelled') {
                 $actions[] = [
                     'type' => 'divider',
                 ];
-
                 try {
                     $actions[] = [
                         'type' => 'button',
@@ -665,7 +490,6 @@ class Document extends Model
                         ],
                     ];
                 } catch (\Exception $e) {}
-
                 try {
                     if (! empty($this->contact) && $this->contact->has_email && ($this->type == 'invoice')) {
                         $actions[] = [
@@ -682,11 +506,9 @@ class Document extends Model
                     }
                 } catch (\Exception $e) {}
             }
-
             $actions[] = [
                 'type' => 'divider',
             ];
-
             if (! in_array($this->status, ['cancelled', 'draft'])) {
                 try {
                     $actions[] = [
@@ -699,12 +521,10 @@ class Document extends Model
                         ],
                     ];
                 } catch (\Exception $e) {}
-
                 $actions[] = [
                     'type' => 'divider',
                 ];
             }
-
             try {
                 $actions[] = [
                     'type' => 'delete',
@@ -734,32 +554,19 @@ class Document extends Model
                 } catch (\Exception $e) {}
             }
         }
-
         return $actions;
     }
-
-    /**
-     * Retrieve the model for a bound value.
-     *
-     * @param  mixed  $value
-     * @param  string|null  $field
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
     public function resolveRouteBinding($value, $field = null)
     {
         $query = $this->where('id', $value);
-
         if (request()->route()->hasParameter('recurring_invoice')) {
             $query->invoiceRecurring();
         }
-
         if (request()->route()->hasParameter('recurring_bill')) {
             $query->billRecurring();
         }
-
         return $query->firstOrFail();
     }
-
     protected static function newFactory(): Factory
     {
         return DocumentFactory::new();

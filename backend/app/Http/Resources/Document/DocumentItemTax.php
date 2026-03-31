@@ -1,18 +1,9 @@
 <?php
-
 namespace App\Http\Resources\Document;
-
 use App\Http\Resources\Setting\Tax;
 use Illuminate\Http\Resources\Json\JsonResource;
-
 class DocumentItemTax extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         return [

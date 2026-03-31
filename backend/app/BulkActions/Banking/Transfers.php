@@ -1,23 +1,17 @@
 <?php
-
 namespace App\BulkActions\Banking;
-
 use App\Abstracts\BulkAction;
 use App\Jobs\Banking\DeleteTransfer;
 use App\Models\Banking\Transfer;
 use App\Exports\Banking\Transfers as Export;
-
 class Transfers extends BulkAction
 {
     public $model = Transfer::class;
-
     public $text = 'general.transfers';
-
     public $path = [
         'group' => 'banking',
         'type' => 'transfers',
     ];
-
     public $actions = [
         'delete'    => [
             'icon'          => 'delete',
@@ -32,13 +26,11 @@ class Transfers extends BulkAction
             'type'          => 'download',
         ],
     ];
-
     public function destroy($request)
     {
         $transfers = $this->getSelectedRecords($request, [
             'expense_transaction', 'income_transaction'
         ]);
-
         foreach ($transfers as $transfer) {
             try {
                 $this->dispatch(new DeleteTransfer($transfer));
@@ -47,11 +39,9 @@ class Transfers extends BulkAction
             }
         }
     }
-
     public function export($request)
     {
         $selected = $this->getSelectedInput($request);
-
         return $this->exportExcel(new Export($selected), trans_choice('general.transfers', 2));
     }
 }

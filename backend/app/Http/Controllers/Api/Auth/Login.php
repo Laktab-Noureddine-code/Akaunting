@@ -1,30 +1,16 @@
 <?php
-
 namespace App\Http\Controllers\Api\Auth;
-
 use App\Abstracts\Http\ApiController;
 use App\Models\Auth\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-
 class Login extends ApiController
 {
-    /**
-     * Instantiate a new controller instance.
-     */
     public function __construct()
     {
-        // No permission middleware for auth endpoints
     }
-
-    /**
-     * Handle a login request and return a Sanctum token.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -32,25 +18,19 @@ class Login extends ApiController
             'password' => 'required|string',
             'device_name' => 'nullable|string',
         ]);
-
         $user = User::where('email', $request->email)->first();
-
         if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => [trans('auth.failed')],
             ]);
         }
-
         if (! $user->enabled) {
             throw ValidationException::withMessages([
                 'email' => [trans('auth.disabled')],
             ]);
         }
-
         $deviceName = $request->device_name ?? 'flutter-app';
-
         $token = $user->createToken($deviceName);
-
         return response()->json([
             'success' => true,
             'message' => trans('auth.login_success', [], 'en') ?: 'Login successful',
@@ -74,18 +54,10 @@ class Login extends ApiController
             ],
         ], 200);
     }
-
-    /**
-     * Revoke the current token (logout).
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function logout(Request $request)
     {
         try {
             $request->user()->currentAccessToken()->delete();
-
             return response()->json([
                 'success' => true,
                 'message' => 'Logged out successfully',
@@ -97,19 +69,10 @@ class Login extends ApiController
             ], 500);
         }
     }
-
-    /**
-     * Get the authenticated user's profile.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function profile(Request $request)
     {
         $user = $request->user();
-
         $user->load('companies', 'roles');
-
         return response()->json([
             'success' => true,
             'data' => [

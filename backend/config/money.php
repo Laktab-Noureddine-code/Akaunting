@@ -1,17 +1,10 @@
 <?php
-
 return [
-
     'defaults' => [
-
         'currency'  => env('MONEY_DEFAULTS_CURRENCY', 'USD'),
-
         'convert'   => env('MONEY_DEFAULTS_CONVERT', true),
-
     ],
-
     'currencies' => [
-
         'AED' => [
             'name'                => 'UAE Dirham',
             'code'                => 784,
@@ -22,7 +15,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'AFN' => [
             'name'                => 'Afghani',
             'code'                => 971,
@@ -33,7 +25,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ALL' => [
             'name'                => 'Lek',
             'code'                => 8,
@@ -44,7 +35,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'AMD' => [
             'name'                => 'Armenian Dram',
             'code'                => 51,
@@ -55,7 +45,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ANG' => [
             'name'                => 'Netherlands Antillean Guilder',
             'code'                => 532,
@@ -66,7 +55,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'AOA' => [
             'name'                => 'Kwanza',
             'code'                => 973,
@@ -77,7 +65,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ARS' => [
             'name'                => 'Argentine Peso',
             'code'                => 32,
@@ -88,7 +75,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'AUD' => [
             'name'                => 'Australian Dollar',
             'code'                => 36,
@@ -99,7 +85,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ' ',
         ],
-
         'AWG' => [
             'name'                => 'Aruban Florin',
             'code'                => 533,
@@ -110,7 +95,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'AZN' => [
             'name'                => 'Azerbaijanian Manat',
             'code'                => 944,
@@ -121,7 +105,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BAM' => [
             'name'                => 'Convertible Mark',
             'code'                => 977,
@@ -132,7 +115,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BBD' => [
             'name'                => 'Barbados Dollar',
             'code'                => 52,
@@ -143,7 +125,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BDT' => [
             'name'                => 'Taka',
             'code'                => 50,
@@ -154,7 +135,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BGN' => [
             'name'                => 'Bulgarian Lev',
             'code'                => 975,
@@ -165,7 +145,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => ' ',
         ],
-
         'BHD' => [
             'name'                => 'Bahraini Dinar',
             'code'                => 48,
@@ -176,7 +155,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BIF' => [
             'name'                => 'Burundi Franc',
             'code'                => 108,
@@ -187,7 +165,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BMD' => [
             'name'                => 'Bermudian Dollar',
             'code'                => 60,
@@ -198,7 +175,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BND' => [
             'name'                => 'Brunei Dollar',
             'code'                => 96,
@@ -209,7 +185,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BOB' => [
             'name'                => 'Boliviano',
             'code'                => 68,
@@ -220,7 +195,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BOV' => [
             'name'                => 'Mvdol',
             'code'                => 984,
@@ -231,7 +205,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BRL' => [
             'name'                => 'Brazilian Real',
             'code'                => 986,
@@ -242,7 +215,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'BSD' => [
             'name'                => 'Bahamian Dollar',
             'code'                => 44,
@@ -253,7 +225,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BTN' => [
             'name'                => 'Ngultrum',
             'code'                => 64,
@@ -264,7 +235,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BWP' => [
             'name'                => 'Pula',
             'code'                => 72,
@@ -275,7 +245,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'BYN' => [
             'name'                => 'Belarussian Ruble',
             'code'                => 974,
@@ -286,7 +255,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => ' ',
         ],
-
         'BZD' => [
             'name'                => 'Belize Dollar',
             'code'                => 84,
@@ -297,7 +265,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'CAD' => [
             'name'                => 'Canadian Dollar',
             'code'                => 124,
@@ -308,7 +275,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'CDF' => [
             'name'                => 'Congolese Franc',
             'code'                => 976,
@@ -319,7 +285,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'CHF' => [
             'name'                => 'Swiss Franc',
             'code'                => 756,
@@ -330,7 +295,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'CLF' => [
             'name'                => 'Unidades de fomento',
             'code'                => 990,
@@ -341,7 +305,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'CLP' => [
             'name'                => 'Chilean Peso',
             'code'                => 152,
@@ -352,7 +315,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'CNY' => [
             'name'                => 'Yuan Renminbi',
             'code'                => 156,
@@ -363,7 +325,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'COP' => [
             'name'                => 'Colombian Peso',
             'code'                => 170,
@@ -374,7 +335,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'CRC' => [
             'name'                => 'Costa Rican Colon',
             'code'                => 188,
@@ -385,7 +345,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'CUC' => [
             'name'                => 'Peso Convertible',
             'code'                => 931,
@@ -396,7 +355,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'CUP' => [
             'name'                => 'Cuban Peso',
             'code'                => 192,
@@ -407,7 +365,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'CVE' => [
             'name'                => 'Cape Verde Escudo',
             'code'                => 132,
@@ -418,7 +375,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'CZK' => [
             'name'                => 'Czech Koruna',
             'code'                => 203,
@@ -429,7 +385,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'DJF' => [
             'name'                => 'Djibouti Franc',
             'code'                => 262,
@@ -440,7 +395,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'DKK' => [
             'name'                => 'Danish Krone',
             'code'                => 208,
@@ -451,7 +405,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'DOP' => [
             'name'                => 'Dominican Peso',
             'code'                => 214,
@@ -462,7 +415,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'DZD' => [
             'name'                => 'Algerian Dinar',
             'code'                => 12,
@@ -473,7 +425,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'EGP' => [
             'name'                => 'Egyptian Pound',
             'code'                => 818,
@@ -484,7 +435,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ERN' => [
             'name'                => 'Nakfa',
             'code'                => 232,
@@ -495,7 +445,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ETB' => [
             'name'                => 'Ethiopian Birr',
             'code'                => 230,
@@ -506,7 +455,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'EUR' => [
             'name'                => 'Euro',
             'code'                => 978,
@@ -517,7 +465,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'FJD' => [
             'name'                => 'Fiji Dollar',
             'code'                => 242,
@@ -528,7 +475,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'FKP' => [
             'name'                => 'Falkland Islands Pound',
             'code'                => 238,
@@ -539,7 +485,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GBP' => [
             'name'                => 'Pound Sterling',
             'code'                => 826,
@@ -550,7 +495,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GEL' => [
             'name'                => 'Lari',
             'code'                => 981,
@@ -561,7 +505,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GHS' => [
             'name'                => 'Ghana Cedi',
             'code'                => 936,
@@ -572,7 +515,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GIP' => [
             'name'                => 'Gibraltar Pound',
             'code'                => 292,
@@ -583,7 +525,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GMD' => [
             'name'                => 'Dalasi',
             'code'                => 270,
@@ -594,7 +535,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GNF' => [
             'name'                => 'Guinea Franc',
             'code'                => 324,
@@ -605,7 +545,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GTQ' => [
             'name'                => 'Quetzal',
             'code'                => 320,
@@ -616,7 +555,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'GYD' => [
             'name'                => 'Guyana Dollar',
             'code'                => 328,
@@ -627,7 +565,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'HKD' => [
             'name'                => 'Hong Kong Dollar',
             'code'                => 344,
@@ -638,7 +575,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'HNL' => [
             'name'                => 'Lempira',
             'code'                => 340,
@@ -649,7 +585,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'HRK' => [
             'name'                => 'Croatian Kuna',
             'code'                => 191,
@@ -660,7 +595,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'HTG' => [
             'name'                => 'Gourde',
             'code'                => 332,
@@ -671,7 +605,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'HUF' => [
             'name'                => 'Forint',
             'code'                => 348,
@@ -682,7 +615,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'IDR' => [
             'name'                => 'Rupiah',
             'code'                => 360,
@@ -693,7 +625,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'ILS' => [
             'name'                => 'New Israeli Sheqel',
             'code'                => 376,
@@ -704,7 +635,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'INR' => [
             'name'                => 'Indian Rupee',
             'code'                => 356,
@@ -715,7 +645,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'IQD' => [
             'name'                => 'Iraqi Dinar',
             'code'                => 368,
@@ -726,7 +655,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'IRR' => [
             'name'                => 'Iranian Rial',
             'code'                => 364,
@@ -737,7 +665,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ISK' => [
             'name'                => 'Iceland Krona',
             'code'                => 352,
@@ -748,7 +675,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'JMD' => [
             'name'                => 'Jamaican Dollar',
             'code'                => 388,
@@ -759,7 +685,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'JOD' => [
             'name'                => 'Jordanian Dinar',
             'code'                => 400,
@@ -770,7 +695,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'JPY' => [
             'name'                => 'Yen',
             'code'                => 392,
@@ -781,7 +705,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KES' => [
             'name'                => 'Kenyan Shilling',
             'code'                => 404,
@@ -792,7 +715,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KGS' => [
             'name'                => 'Som',
             'code'                => 417,
@@ -803,7 +725,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KHR' => [
             'name'                => 'Riel',
             'code'                => 116,
@@ -814,7 +735,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KMF' => [
             'name'                => 'Comoro Franc',
             'code'                => 174,
@@ -825,7 +745,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KPW' => [
             'name'                => 'North Korean Won',
             'code'                => 408,
@@ -836,7 +755,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KRW' => [
             'name'                => 'Won',
             'code'                => 410,
@@ -847,7 +765,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KWD' => [
             'name'                => 'Kuwaiti Dinar',
             'code'                => 414,
@@ -858,7 +775,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KYD' => [
             'name'                => 'Cayman Islands Dollar',
             'code'                => 136,
@@ -869,7 +785,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'KZT' => [
             'name'                => 'Tenge',
             'code'                => 398,
@@ -880,7 +795,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LAK' => [
             'name'                => 'Kip',
             'code'                => 418,
@@ -891,7 +805,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LBP' => [
             'name'                => 'Lebanese Pound',
             'code'                => 422,
@@ -902,7 +815,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LKR' => [
             'name'                => 'Sri Lanka Rupee',
             'code'                => 144,
@@ -913,7 +825,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LRD' => [
             'name'                => 'Liberian Dollar',
             'code'                => 430,
@@ -924,7 +835,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LSL' => [
             'name'                => 'Loti',
             'code'                => 426,
@@ -935,7 +845,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LTL' => [
             'name'                => 'Lithuanian Litas',
             'code'                => 440,
@@ -946,7 +855,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LVL' => [
             'name'                => 'Latvian Lats',
             'code'                => 428,
@@ -957,7 +865,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'LYD' => [
             'name'                => 'Libyan Dinar',
             'code'                => 434,
@@ -968,7 +875,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MAD' => [
             'name'                => 'Moroccan Dirham',
             'code'                => 504,
@@ -979,7 +885,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MDL' => [
             'name'                => 'Moldovan Leu',
             'code'                => 498,
@@ -990,7 +895,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MGA' => [
             'name'                => 'Malagasy Ariary',
             'code'                => 969,
@@ -1001,7 +905,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MKD' => [
             'name'                => 'Denar',
             'code'                => 807,
@@ -1012,7 +915,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MMK' => [
             'name'                => 'Kyat',
             'code'                => 104,
@@ -1023,7 +925,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MNT' => [
             'name'                => 'Tugrik',
             'code'                => 496,
@@ -1034,7 +935,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MOP' => [
             'name'                => 'Pataca',
             'code'                => 446,
@@ -1045,7 +945,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MRO' => [
             'name'                => 'Ouguiya',
             'code'                => 478,
@@ -1056,7 +955,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MUR' => [
             'name'                => 'Mauritius Rupee',
             'code'                => 480,
@@ -1067,7 +965,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MVR' => [
             'name'                => 'Rufiyaa',
             'code'                => 462,
@@ -1078,7 +975,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MWK' => [
             'name'                => 'Kwacha',
             'code'                => 454,
@@ -1089,7 +985,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MXN' => [
             'name'                => 'Mexican Peso',
             'code'                => 484,
@@ -1100,7 +995,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MYR' => [
             'name'                => 'Malaysian Ringgit',
             'code'                => 458,
@@ -1111,7 +1005,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'MZN' => [
             'name'                => 'Mozambique Metical',
             'code'                => 943,
@@ -1122,7 +1015,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'NAD' => [
             'name'                => 'Namibia Dollar',
             'code'                => 516,
@@ -1133,7 +1025,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'NGN' => [
             'name'                => 'Naira',
             'code'                => 566,
@@ -1144,7 +1035,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'NIO' => [
             'name'                => 'Cordoba Oro',
             'code'                => 558,
@@ -1155,7 +1045,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'NOK' => [
             'name'                => 'Norwegian Krone',
             'code'                => 578,
@@ -1166,7 +1055,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'NPR' => [
             'name'                => 'Nepalese Rupee',
             'code'                => 524,
@@ -1177,7 +1065,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'NZD' => [
             'name'                => 'New Zealand Dollar',
             'code'                => 554,
@@ -1188,7 +1075,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'OMR' => [
             'name'                => 'Rial Omani',
             'code'                => 512,
@@ -1199,7 +1085,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'PAB' => [
             'name'                => 'Balboa',
             'code'                => 590,
@@ -1210,7 +1095,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'PEN' => [
             'name'                => 'Sol',
             'code'                => 604,
@@ -1221,7 +1105,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'PGK' => [
             'name'                => 'Kina',
             'code'                => 598,
@@ -1232,7 +1115,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'PHP' => [
             'name'                => 'Philippine Peso',
             'code'                => 608,
@@ -1243,7 +1125,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'PKR' => [
             'name'                => 'Pakistan Rupee',
             'code'                => 586,
@@ -1254,7 +1135,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'PLN' => [
             'name'                => 'Zloty',
             'code'                => 985,
@@ -1265,7 +1145,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => ' ',
         ],
-
         'PYG' => [
             'name'                => 'Guarani',
             'code'                => 600,
@@ -1276,7 +1155,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'QAR' => [
             'name'                => 'Qatari Rial',
             'code'                => 634,
@@ -1287,7 +1165,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'RON' => [
             'name'                => 'New Romanian Leu',
             'code'                => 946,
@@ -1298,7 +1175,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'RSD' => [
             'name'                => 'Serbian Dinar',
             'code'                => 941,
@@ -1309,7 +1185,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'RUB' => [
             'name'                => 'Russian Ruble',
             'code'                => 643,
@@ -1320,7 +1195,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'RWF' => [
             'name'                => 'Rwanda Franc',
             'code'                => 646,
@@ -1331,7 +1205,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SAR' => [
             'name'                => 'Saudi Riyal',
             'code'                => 682,
@@ -1342,7 +1215,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SBD' => [
             'name'                => 'Solomon Islands Dollar',
             'code'                => 90,
@@ -1353,7 +1225,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SCR' => [
             'name'                => 'Seychelles Rupee',
             'code'                => 690,
@@ -1364,7 +1235,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SDG' => [
             'name'                => 'Sudanese Pound',
             'code'                => 938,
@@ -1375,7 +1245,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SEK' => [
             'name'                => 'Swedish Krona',
             'code'                => 752,
@@ -1386,7 +1255,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => ' ',
         ],
-
         'SGD' => [
             'name'                => 'Singapore Dollar',
             'code'                => 702,
@@ -1397,7 +1265,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SHP' => [
             'name'                => 'Saint Helena Pound',
             'code'                => 654,
@@ -1408,7 +1275,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SLL' => [
             'name'                => 'Leone',
             'code'                => 694,
@@ -1419,7 +1285,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SOS' => [
             'name'                => 'Somali Shilling',
             'code'                => 706,
@@ -1430,7 +1295,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SRD' => [
             'name'                => 'Surinam Dollar',
             'code'                => 968,
@@ -1441,7 +1305,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SSP' => [
             'name'                => 'South Sudanese Pound',
             'code'                => 728,
@@ -1452,7 +1315,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'STD' => [
             'name'                => 'Dobra',
             'code'                => 678,
@@ -1463,7 +1325,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SVC' => [
             'name'                => 'El Salvador Colon',
             'code'                => 222,
@@ -1474,7 +1335,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SYP' => [
             'name'                => 'Syrian Pound',
             'code'                => 760,
@@ -1485,7 +1345,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'SZL' => [
             'name'                => 'Lilangeni',
             'code'                => 748,
@@ -1496,7 +1355,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'THB' => [
             'name'                => 'Baht',
             'code'                => 764,
@@ -1507,7 +1365,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'TJS' => [
             'name'                => 'Somoni',
             'code'                => 972,
@@ -1518,7 +1375,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'TMT' => [
             'name'                => 'Turkmenistan New Manat',
             'code'                => 934,
@@ -1529,7 +1385,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'TND' => [
             'name'                => 'Tunisian Dinar',
             'code'                => 788,
@@ -1540,7 +1395,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'TOP' => [
             'name'                => 'Pa’anga',
             'code'                => 776,
@@ -1551,7 +1405,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'TRY' => [
             'name'                => 'Turkish Lira',
             'code'                => 949,
@@ -1562,7 +1415,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'TTD' => [
             'name'                => 'Trinidad and Tobago Dollar',
             'code'                => 780,
@@ -1573,7 +1425,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'TWD' => [
             'name'                => 'New Taiwan Dollar',
             'code'                => 901,
@@ -1584,7 +1435,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'TZS' => [
             'name'                => 'Tanzanian Shilling',
             'code'                => 834,
@@ -1595,7 +1445,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'UAH' => [
             'name'                => 'Hryvnia',
             'code'                => 980,
@@ -1606,7 +1455,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'UGX' => [
             'name'                => 'Uganda Shilling',
             'code'                => 800,
@@ -1617,7 +1465,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'USD' => [
             'name'                => 'US Dollar',
             'code'                => 840,
@@ -1628,7 +1475,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'UYU' => [
             'name'                => 'Peso Uruguayo',
             'code'                => 858,
@@ -1639,7 +1485,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'UZS' => [
             'name'                => 'Uzbekistan Sum',
             'code'                => 860,
@@ -1650,8 +1495,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
-        // This currency is no longer used. It will be removed soon.
         'VEF' => [
             'name'                => 'Bolivar',
             'code'                => 937,
@@ -1662,7 +1505,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'VES' => [
             'name'                => 'Bolívar Soberano',
             'code'                => 928,
@@ -1673,7 +1515,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-        
         'VED' => [
             'name'                => 'Dijital Bolívar',
             'code'                => 926,
@@ -1684,7 +1525,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'VND' => [
             'name'                => 'Dong',
             'code'                => 704,
@@ -1695,7 +1535,6 @@ return [
             'decimal_mark'        => ',',
             'thousands_separator' => '.',
         ],
-
         'VUV' => [
             'name'                => 'Vatu',
             'code'                => 548,
@@ -1706,7 +1545,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'WST' => [
             'name'                => 'Tala',
             'code'                => 882,
@@ -1717,7 +1555,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'XAF' => [
             'name'                => 'CFA Franc BEAC',
             'code'                => 950,
@@ -1728,7 +1565,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'XAG' => [
             'name'                => 'Silver',
             'code'                => 961,
@@ -1739,7 +1575,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'XAU' => [
             'name'                => 'Gold',
             'code'                => 959,
@@ -1750,7 +1585,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'XCD' => [
             'name'                => 'East Caribbean Dollar',
             'code'                => 951,
@@ -1761,7 +1595,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'XDR' => [
             'name'                => 'SDR (Special Drawing Right)',
             'code'                => 960,
@@ -1772,7 +1605,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'XOF' => [
             'name'                => 'CFA Franc BCEAO',
             'code'                => 952,
@@ -1783,7 +1615,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'XPF' => [
             'name'                => 'CFP Franc',
             'code'                => 953,
@@ -1794,7 +1625,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'YER' => [
             'name'                => 'Yemeni Rial',
             'code'                => 886,
@@ -1805,7 +1635,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ZAR' => [
             'name'                => 'Rand',
             'code'                => 710,
@@ -1816,7 +1645,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ZMW' => [
             'name'                => 'Zambian Kwacha',
             'code'                => 967,
@@ -1827,7 +1655,6 @@ return [
             'decimal_mark'        => '.',
             'thousands_separator' => ',',
         ],
-
         'ZWL' => [
             'name'                => 'Zimbabwe Dollar',
             'code'                => 932,
@@ -1839,5 +1666,4 @@ return [
             'thousands_separator' => ',',
         ],
     ],
-
 ];

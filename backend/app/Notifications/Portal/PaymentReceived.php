@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Notifications\Portal;
-
 use App\Abstracts\Notification;
 use App\Models\Banking\Transaction;
 use App\Models\Setting\EmailTemplate;
@@ -10,83 +8,35 @@ use App\Traits\Documents;
 use Illuminate\Mail\Attachment;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\URL;
-
 class PaymentReceived extends Notification
 {
     use Documents;
-
-    /**
-     * The bill model.
-     *
-     * @var object
-     */
     public $invoice;
-
-    /**
-     * The payment transaction.
-     *
-     * @var Transaction
-     */
     public $transaction;
-
-    /**
-     * The email template.
-     *
-     * @var EmailTemplate
-     */
     public $template;
-
-    /**
-     * Should attach pdf or not.
-     *
-     * @var bool
-     */
     public $attach_pdf;
-
-    /**
-     * Create a notification instance.
-     */
     public function __construct(Document $invoice = null, Transaction $transaction = null, string $template_alias = null, bool $attach_pdf = false)
     {
         parent::__construct();
-
         $this->invoice = $invoice;
         $this->transaction = $transaction;
         $this->template = EmailTemplate::alias($template_alias)->first();
         $this->attach_pdf = $attach_pdf;
     }
-
-    /**
-     * Build the mail representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     */
     public function toMail($notifiable): MailMessage
     {
         $message = $this->initMailMessage();
-
-        // Attach the PDF file
         if ($this->attach_pdf) {
             $func = is_local_storage() ? 'fromPath' : 'fromStorage';
-
             $path = $this->storeDocumentPdfAndGetPath($this->invoice);
             $file = Attachment::$func($path)->withMime('application/pdf');
-
             $message->attach($file);
         }
-
         return $message;
     }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     */
     public function toArray($notifiable): array
     {
         $this->initArrayMessage();
-
         return [
             'template_alias' => $this->template->alias,
             'title' => trans('notifications.menu.' . $this->template->alias . '.title'),
@@ -100,7 +50,6 @@ class PaymentReceived extends Notification
             'status' => $this->invoice->status,
         ];
     }
-
     public function getTags(): array
     {
         return [
@@ -122,14 +71,12 @@ class PaymentReceived extends Notification
             '{company_address}',
         ];
     }
-
     public function getTagsReplacement(): array
     {
         $route_params = [
             'company_id'    => $this->invoice->company_id,
             'invoice'       => $this->invoice->id,
         ];
-
         return [
             $this->invoice->document_number,
             money($this->invoice->amount, $this->invoice->currency_code),

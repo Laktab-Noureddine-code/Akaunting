@@ -1,18 +1,9 @@
 <?php
-
 namespace App\Http\Resources\Banking;
-
 use App\Http\Resources\Banking\Account;
 use Illuminate\Http\Resources\Json\JsonResource;
-
 class Reconciliation extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         return [

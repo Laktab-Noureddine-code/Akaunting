@@ -72,25 +72,4 @@ class ApiReconciliationRepository implements ReconciliationRepository {
     try {
       final queryParams = {
         'search': 'account_id:$accountId paid_at:>=$startedAt paid_at:<=$endedAt',
-        'limit': 100 // Get enough for one page
-      };
-      final response = await _dio.get('/api/transactions', queryParameters: queryParams);
-      final data = response.data as Map<String, dynamic>;
-      final List items = data['data'] as List;
-      return items.map((json) => TransactionModel.fromJson(json)).toList();
-    } on DioException catch (e) {
-      throw _handleError(e);
-    }
-  }
-
-  Exception _handleError(DioException e) {
-    if (e.response != null) {
-      final data = e.response!.data;
-      if (data is Map && data['message'] != null) {
-        return Exception(data['message']);
-      }
-      return Exception('Server error: ${e.response!.statusCode}');
-    }
-    return Exception('Network error. Please check your connection.');
-  }
-}
+        'limit': 100

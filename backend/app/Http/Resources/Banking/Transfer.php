@@ -1,22 +1,12 @@
 <?php
-
 namespace App\Http\Resources\Banking;
-
 use Illuminate\Http\Resources\Json\JsonResource;
-
 class Transfer extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         $expense_transaction = $this->expense_transaction;
         $income_transaction = $this->income_transaction;
-
         return [
             'id' => $this->id,
             'company_id' => $this->company_id,

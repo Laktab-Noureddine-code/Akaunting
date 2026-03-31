@@ -79,10 +79,10 @@ class BaseButton extends StatelessWidget {
   EdgeInsets _getPadding() {
     if (link) return EdgeInsets.zero;
     if (icon) return const EdgeInsets.all(12);
-    
+
     double horizontal = wide ? 32.0 : 16.0;
     double vertical = 10.0;
-    
+
     switch (size) {
       case ButtonSize.sm:
         horizontal = wide ? 24.0 : 12.0;
@@ -130,58 +130,4 @@ class BaseButton extends StatelessWidget {
 
     ShapeBorder shape;
     if (round || icon) {
-      shape = const StadiumBorder(); // or CircleBorder if only icon and totally round
-    } else {
-      shape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(8));
-    }
-
-    if (outline) {
-      shape = RoundedRectangleBorder(
-        borderRadius: round ? BorderRadius.circular(50) : BorderRadius.circular(8),
-        side: BorderSide(color: borderColor, width: 1.5),
-      );
-    }
-
-    Widget btn;
-    if (link) {
-      btn = TextButton(
-        onPressed: disabled || loading ? null : onPressed,
-        style: TextButton.styleFrom(
-          padding: _getPadding(),
-          shape: shape as OutlinedBorder,
-          foregroundColor: textColor,
-        ),
-        child: buttonContent,
-      );
-    } else if (outline) {
-      btn = OutlinedButton(
-        onPressed: disabled || loading ? null : onPressed,
-        style: OutlinedButton.styleFrom(
-          padding: _getPadding(),
-          shape: shape as OutlinedBorder,
-          foregroundColor: textColor,
-          side: BorderSide(color: borderColor, width: 1.5),
-        ),
-        child: buttonContent,
-      );
-    } else {
-      btn = ElevatedButton(
-        onPressed: disabled || loading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: bgColor,
-          foregroundColor: textColor,
-          padding: _getPadding(),
-          shape: shape as OutlinedBorder,
-          elevation: 0,
-        ),
-        child: buttonContent,
-      );
-    }
-
-    if (block) {
-      btn = SizedBox(width: double.infinity, child: btn);
-    }
-
-    return btn;
-  }
-}
+      shape = const StadiumBorder();

@@ -1,24 +1,18 @@
 <?php
-
 namespace App\BulkActions\Common;
-
 use App\Abstracts\BulkAction;
 use App\Exports\Common\Items as Export;
 use App\Jobs\Common\DeleteItem;
 use App\Jobs\Common\UpdateItem;
 use App\Models\Common\Item;
-
 class Items extends BulkAction
 {
     public $model = Item::class;
-
     public $text = 'general.items';
-
     public $path = [
         'group' => 'common',
         'type' => 'items',
     ];
-
     public $actions = [
         'edit' => [
             'icon'          => 'edit',
@@ -57,18 +51,14 @@ class Items extends BulkAction
             'type'          => 'download',
         ],
     ];
-
     public function edit($request)
     {
         $selected = $this->getSelectedInput($request);
-
         return $this->response('bulk-actions.common.items.edit', compact('selected'));
     }
-
     public function update($request)
     {
         $items = $this->getSelectedRecords($request, 'taxes');
-
         foreach ($items as $item) {
             try {
                 $this->dispatch(new UpdateItem($item, $this->getUpdateRequest($request)));
@@ -77,11 +67,9 @@ class Items extends BulkAction
             }
         }
     }
-
     public function destroy($request)
     {
         $items = $this->getSelectedRecords($request, 'taxes');
-
         foreach ($items as $item) {
             try {
                 $this->dispatch(new DeleteItem($item));
@@ -90,11 +78,9 @@ class Items extends BulkAction
             }
         }
     }
-
     public function export($request)
     {
         $selected = $this->getSelectedInput($request);
-
         return $this->exportExcel(new Export($selected), trans_choice('general.items', 2));
     }
 }

@@ -1,28 +1,13 @@
 <?php
-
 namespace Database\Factories;
-
 use App\Abstracts\Factory;
 use App\Models\Common\Item as Model;
-
 class Item extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
     protected $model = Model::class;
-
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
     public function definition()
     {
         $types = ['product', 'service'];
-
         return [
             'company_id' => $this->company->id,
             'type' => $this->faker->randomElement($types),
@@ -35,24 +20,12 @@ class Item extends Factory
             'created_from' => 'core::factory',
         ];
     }
-
-    /**
-     * Indicate that the model is enabled.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function enabled()
     {
         return $this->state([
             'enabled' => 1,
         ]);
     }
-
-    /**
-     * Indicate that the model is disabled.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function disabled()
     {
         return $this->state([

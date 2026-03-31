@@ -150,7 +150,7 @@ class _AccountsListViewState extends State<AccountsListView> {
                                     ),
                                   ),
                                   Text(
-                                    account.currentBalanceFormatted ?? 
+                                    account.currentBalanceFormatted ??
                                         '\$${account.currentBalance?.toStringAsFixed(2) ?? "0.00"}',
                                     style: const TextStyle(
                                       fontSize: 16,

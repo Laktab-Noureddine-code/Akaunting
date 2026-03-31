@@ -1,26 +1,15 @@
 <?php
-
 namespace App\View\Components\Form\Group;
-
 use App\Abstracts\View\Components\Form;
-
 class NumberDigit extends Form
 {
     public $type = 'number_digit';
-
     public $number_digits;
-
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|string
-     */
     public function render()
     {
         if (empty($this->name)) {
             $this->name = 'number_digit';
         }
-        
         $this->number_digits = [
             '1' => '1',
             '2' => '2',
@@ -43,11 +32,9 @@ class NumberDigit extends Form
             '19' => '19',
             '20' => '20',
         ];
-
         if (empty($this->selected) && empty($this->getParentData('model'))) {
             $this->selected = setting('invoice.number_digit');
         }
-
         return view('components.form.group.number_digit');
     }
 }

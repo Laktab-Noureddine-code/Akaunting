@@ -1,34 +1,21 @@
 <?php
-
 namespace Database\Seeds;
-
 use App\Abstracts\Model;
 use App\Jobs\Common\CreateReport;
 use App\Traits\Jobs;
 use Illuminate\Database\Seeder;
-
 class Reports extends Seeder
 {
     use Jobs;
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         Model::unguard();
-
         $this->create();
-
         Model::reguard();
     }
-
     private function create()
     {
         $company_id = $this->command->argument('company');
-
         $rows = [
             [
                 'company_id' => $company_id,
@@ -66,10 +53,8 @@ class Reports extends Seeder
                 'settings' => ['period' => 'quarterly', 'basis' => 'accrual'],
             ],
         ];
-
         foreach ($rows as $row) {
             $row['created_from'] = 'core::seed';
-
             $this->dispatch(new CreateReport($row));
         }
     }

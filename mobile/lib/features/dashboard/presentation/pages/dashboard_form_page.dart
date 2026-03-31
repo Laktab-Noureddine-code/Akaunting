@@ -33,7 +33,7 @@ class _DashboardFormView extends StatefulWidget {
 
 class _DashboardFormViewState extends State<_DashboardFormView> {
   final _formKey = GlobalKey<FormState>();
-  
+
   late TextEditingController _nameController;
   late bool _enabled;
 
@@ -53,7 +53,7 @@ class _DashboardFormViewState extends State<_DashboardFormView> {
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
-    
+
     if (_nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill required fields'), backgroundColor: Colors.red),

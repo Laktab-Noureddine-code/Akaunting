@@ -6,10 +6,6 @@ import BaseButton from './../components/BaseButton.vue';
 import Badge from './../components/Badge.vue';
 import BaseAlert from './../components/BaseAlert';
 import { Input, Tooltip, Popover } from 'element-ui';
-/**
- * You can register global components here and use them as a plugin in your main Vue instance
- */
-
 const GlobalComponents = {
     install(Vue) {
         Vue.component(Badge.name, Badge);
@@ -25,5 +21,4 @@ const GlobalComponents = {
         Vue.use(Popover);
     }
 };
-
 export default GlobalComponents;

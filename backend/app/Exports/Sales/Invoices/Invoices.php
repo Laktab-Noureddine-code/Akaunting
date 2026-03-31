@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Exports\Sales\Invoices;
-
 use App\Exports\Sales\Invoices\Sheets\Invoices as Base;
 use App\Exports\Sales\Invoices\Sheets\InvoiceItems;
 use App\Exports\Sales\Invoices\Sheets\InvoiceItemTaxes;
@@ -10,18 +8,14 @@ use App\Exports\Sales\Invoices\Sheets\InvoiceTotals;
 use App\Exports\Sales\Invoices\Sheets\InvoiceTransactions;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
-
 class Invoices implements WithMultipleSheets
 {
     use Exportable;
-
     public $ids;
-
     public function __construct($ids = null)
     {
         $this->ids = $ids;
     }
-
     public function sheets(): array
     {
         return [

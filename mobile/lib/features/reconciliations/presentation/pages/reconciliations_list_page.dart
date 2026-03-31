@@ -103,7 +103,7 @@ class _ReconciliationsListViewState extends State<ReconciliationsListView> {
                         final rec = state.reconciliations[index];
                         final startDate = rec.startedAt.split('T').first;
                         final endDate = rec.endedAt.split('T').first;
-                        
+
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 12.0),
                           child: AppCard(
@@ -152,7 +152,7 @@ class _ReconciliationsListViewState extends State<ReconciliationsListView> {
                                     ),
                                   ),
                                   Text(
-                                    rec.closingBalanceFormatted ?? 
+                                    rec.closingBalanceFormatted ??
                                         '\$${rec.closingBalance.toStringAsFixed(2)}',
                                     style: const TextStyle(
                                       fontSize: 16,

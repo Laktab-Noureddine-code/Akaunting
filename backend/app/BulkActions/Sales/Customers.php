@@ -1,23 +1,17 @@
 <?php
-
 namespace App\BulkActions\Sales;
-
 use App\Abstracts\BulkAction;
 use App\Exports\Sales\Customers as Export;
 use App\Jobs\Common\UpdateContact;
 use App\Models\Common\Contact;
-
 class Customers extends BulkAction
 {
     public $model = Contact::class;
-
     public $text = 'general.customers';
-
     public $path = [
         'group' => 'sales',
         'type' => 'customers',
     ];
-
     public $actions = [
         'edit' => [
             'icon'          => 'edit',
@@ -52,46 +46,37 @@ class Customers extends BulkAction
             'type'          => 'download',
         ],
     ];
-
     public function edit($request)
     {
         $selected = $this->getSelectedInput($request);
-
         return $this->response('bulk-actions.sales.customers.edit', compact('selected'));
     }
-
     public function update($request)
     {
         $customers = $this->getSelectedRecords($request);
-
         foreach ($customers as $customer) {
             try {
                 $request->merge([
                     'enabled' => $customer->enabled,
                     'uploaded_logo' => $customer->logo,
-                ]); // for update job authorize..
-
+                ]); 
                 $this->dispatch(new UpdateContact($customer, $this->getUpdateRequest($request)));
             } catch (\Exception $e) {
                 flash($e->getMessage())->error()->important();
             }
         }
     }
-
     public function disable($request)
     {
         $this->disableContacts($request);
     }
-
     public function destroy($request)
     {
         $this->deleteContacts($request);
     }
-
     public function export($request)
     {
         $selected = $this->getSelectedInput($request);
-
         return $this->exportExcel(new Export($selected), trans_choice('general.customers', 2));
     }
 }

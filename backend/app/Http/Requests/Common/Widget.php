@@ -1,17 +1,9 @@
 <?php
-
 namespace App\Http\Requests\Common;
-
 use App\Abstracts\Http\FormRequest;
 use Illuminate\Support\Str;
-
 class Widget extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
@@ -21,7 +13,6 @@ class Widget extends FormRequest
             'sort' => 'integer',
         ];
     }
-
     public function messages()
     {
         return [

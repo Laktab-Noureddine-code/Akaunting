@@ -1,18 +1,9 @@
 <?php
-
 namespace App\Http\Resources\Common;
-
 use App\Utilities\Reports as Utility;
 use Illuminate\Http\Resources\Json\JsonResource;
-
 class Report extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         return [
@@ -29,21 +20,16 @@ class Report extends JsonResource
             'updated_at' => $this->updated_at ? $this->updated_at->toIso8601String() : '',
         ];
     }
-
     protected function getReportData()
     {
         $report = Utility::getClassInstance($this->resource);
-
         if (empty($report)) {
             return [];
         }
-
         $unset_attributes = ['model', 'views', 'loaded', 'column_name_width', 'column_value_width'];
-
         foreach ($unset_attributes as $attribute) {
             unset($report->$attribute);
         }
-
         return $report;
     }
 }

@@ -9,10 +9,3 @@ abstract class DocumentRepository {
   Future<void> deleteDocument(int id);
   Future<DocumentModel> markAsReceived(int id);
 
-  // Document Transactions
-  Future<List<TransactionModel>> getDocumentTransactions(int documentId);
-  Future<TransactionModel> getDocumentTransaction(int documentId, int transactionId);
-  Future<TransactionModel> createDocumentTransaction(int documentId, Map<String, dynamic> data);
-  Future<TransactionModel> updateDocumentTransaction(int documentId, int transactionId, Map<String, dynamic> data);
-  Future<void> deleteDocumentTransaction(int documentId, int transactionId);
-}

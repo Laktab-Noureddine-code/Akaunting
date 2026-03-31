@@ -1,7 +1,5 @@
 <?php
-
 namespace Database\Seeds;
-
 use App\Abstracts\Model;
 use App\Jobs\Auth\CreateUser;
 use App\Jobs\Common\CreateCompany;
@@ -10,47 +8,30 @@ use App\Traits\Jobs;
 use App\Traits\Modules;
 use Artisan;
 use Illuminate\Database\Seeder;
-
 class TestCompany extends Seeder
 {
     use Jobs, Modules;
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         Model::unguard();
-
         $this->migrateRoles();
-
         $this->call(Permissions::class);
-
         $this->createCompany();
-
         $this->createUser();
-
         $this->createCustomer();
-
         $this->installModules();
-
         Model::reguard();
     }
-
     private function migrateRoles()
     {
         if (! $this->moduleExists('roles')) {
             return;
         }
-
         Artisan::call('module:migrate', [
             'alias' => 'roles',
             '--force' => true
         ]);
     }
-
     private function createCompany()
     {
         $company = $this->dispatch(new CreateCompany([
@@ -69,15 +50,11 @@ class TestCompany extends Seeder
             ],
             'created_from' => 'core::seed',
         ]));
-
         $company->makeCurrent(true);
-
         setting()->set('email.protocol', 'log');
         config(['mail.default' => setting('email.protocol')]);
-
         $this->command->info('Test company created.');
     }
-
     public function createUser()
     {
         $this->dispatch(new CreateUser([
@@ -89,10 +66,8 @@ class TestCompany extends Seeder
             'roles' => ['1'],
             'enabled' => '1',
         ]));
-
         $this->command->info('Test user created.');
     }
-
     private function createCustomer()
     {
         $this->dispatch(new CreateContact([
@@ -106,30 +81,23 @@ class TestCompany extends Seeder
             'enabled' => '1',
             'create_user' => 'true',
         ]));
-
         $this->command->info('Test customer created.');
     }
-
     private function installModules()
     {
         $core_modules = ['offline-payments', 'paypal-standard'];
-
         $modules = module()->all();
-
         foreach ($modules as $module) {
             $alias = $module->getAlias();
-
             if (in_array($alias, $core_modules)) {
                 continue;
             }
-
             Artisan::call('module:install', [
                 'alias'     => $alias,
                 'company'   => company_id(),
                 'locale'    => session('locale', company(company_id())->locale),
             ]);
         }
-
         $this->command->info('Modules installed.');
     }
 }

@@ -1,34 +1,21 @@
 <?php
-
 namespace Database\Seeds;
-
 use App\Abstracts\Model;
 use App\Jobs\Setting\CreateEmailTemplate;
 use App\Traits\Jobs;
 use Illuminate\Database\Seeder;
-
 class EmailTemplates extends Seeder
 {
     use Jobs;
-
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         Model::unguard();
-
         $this->create();
-
         Model::reguard();
     }
-
     private function create()
     {
         $company_id = $this->command->argument('company');
-
         $templates = [
             [
                 'alias' => 'invoice_new_customer',
@@ -91,7 +78,6 @@ class EmailTemplates extends Seeder
                 'name' => 'settings.email.templates.payment_made_vendor',
             ],
         ];
-
         foreach ($templates as $template) {
             $this->dispatch(new CreateEmailTemplate([
                 'company_id' => $company_id,

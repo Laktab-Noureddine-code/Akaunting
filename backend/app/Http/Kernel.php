@@ -1,18 +1,8 @@
 <?php
-
 namespace App\Http;
-
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-
 class Kernel extends HttpKernel
 {
-    /**
-     * The application's global HTTP middleware stack.
-     *
-     * These middleware are run during every request to your application.
-     *
-     * @var array
-     */
     protected $middleware = [
         \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
@@ -22,18 +12,11 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
-
-    /**
-     * The application's route middleware groups.
-     *
-     * @var array
-     */
     protected $middlewareGroups = [
         'web' => [
             'cookies.encrypt',
             'cookies.response',
             'session.start',
-            // 'session.auth',
             'session.errors',
             'csrf',
             'install.redirect',
@@ -41,12 +24,10 @@ class Kernel extends HttpKernel
             'language',
             'firewall.all',
         ],
-
         'install' => [
             'web',
             'install.can',
         ],
-
         'api' => [
             'api.auth',
             'auth.disabled',
@@ -58,7 +39,6 @@ class Kernel extends HttpKernel
             'language',
             'firewall.all',
         ],
-
         'common' => [
             'web',
             'company.identify',
@@ -66,13 +46,11 @@ class Kernel extends HttpKernel
             'read.only',
             'wizard.redirect',
         ],
-
         'guest' => [
             'web',
             'auth.redirect',
             'read.only',
         ],
-
         'admin' => [
             'web',
             'auth',
@@ -86,7 +64,6 @@ class Kernel extends HttpKernel
             'plan.limits',
             'module.subscription',
         ],
-
         'wizard' => [
             'web',
             'auth',
@@ -96,7 +73,6 @@ class Kernel extends HttpKernel
             'read.only',
             'permission:read-admin-panel',
         ],
-
         'portal' => [
             'web',
             'auth',
@@ -107,7 +83,6 @@ class Kernel extends HttpKernel
             'menu.portal',
             'permission:read-client-portal',
         ],
-
         'preview' => [
             'web',
             'auth',
@@ -117,7 +92,6 @@ class Kernel extends HttpKernel
             'read.only',
             'permission:read-admin-panel',
         ],
-
         'signed' => [
             'cookies.encrypt',
             'cookies.response',
@@ -132,25 +106,14 @@ class Kernel extends HttpKernel
             'language',
             'firewall.all',
         ],
-
         'import' => [
             'throttle:import',
         ],
-
         'email' => [
             'throttle:email',
         ],
     ];
-
-    /**
-     * The application's middleware aliases.
-     *
-     * Aliases may be used to conveniently assign middleware to routes and groups.
-     *
-     * @var array<string, class-string|string>
-     */
     protected $middlewareAliases = [
-        // Laravel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -162,12 +125,9 @@ class Kernel extends HttpKernel
         'session.auth' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'session.errors' => \Illuminate\View\Middleware\ShareErrorsFromSession::class,
         'session.start' => \Illuminate\Session\Middleware\StartSession::class,
-        //'signature' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'signature' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-
-        // Akaunting
         'api.auth' => \App\Http\Middleware\ApiAuthenticate::class,
         'api.key' => \App\Http\Middleware\RedirectIfNoApiKey::class,
         'auth.basic.once' => \App\Http\Middleware\AuthenticateOnceWithBasicAuth::class,
@@ -186,20 +146,10 @@ class Kernel extends HttpKernel
         'money' => \App\Http\Middleware\Money::class,
         'read.only' => \App\Http\Middleware\CheckForReadOnlyMode::class,
         'wizard.redirect' => \App\Http\Middleware\RedirectIfWizardNotCompleted::class,
-
-        // Vendor
         'ability' => \Laratrust\Middleware\LaratrustAbility::class,
         'role' => \Laratrust\Middleware\LaratrustRole::class,
         'permission' => \Laratrust\Middleware\LaratrustPermission::class,
     ];
-
-    /**
-     * The priority-sorted list of middleware.
-     *
-     * This forces non-global middleware to always be in the given order.
-     *
-     * @var array
-     */
     protected $middlewarePriority = [
         \Illuminate\Session\Middleware\StartSession::class,
         \Illuminate\View\Middleware\ShareErrorsFromSession::class,

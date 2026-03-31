@@ -1,38 +1,24 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
-        // Accounts
         Schema::table('accounts', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
         });
-
-        // Categories
         Schema::table('categories', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
         });
-
-        // Companies
         Schema::table('companies', function (Blueprint $table) {
             $table->string('domain')->nullable()->change();
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
         });
-
-        // Contacts
         Schema::create('contacts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -55,18 +41,13 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index(['company_id', 'type']);
             $table->unique(['company_id', 'type', 'email', 'deleted_at']);
         });
-
-        // Currencies
         Schema::table('currencies', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
         });
-
-        // Dashboards & Widgets
         Schema::create('dashboards', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -76,17 +57,13 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index(['company_id']);
         });
-
         Schema::create('user_dashboards', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('dashboard_id')->unsigned();
-
             $table->primary(['user_id', 'dashboard_id']);
         });
-
         Schema::create('widgets', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -99,12 +76,9 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index(['company_id', 'dashboard_id']);
             $table->index('class');
         });
-
-        // Documents
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('company_id');
@@ -135,12 +109,10 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('company_id');
             $table->index('type');
             $table->unique(['document_number', 'deleted_at', 'company_id', 'type']);
         });
-
         Schema::create('document_histories', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -153,12 +125,10 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('company_id');
             $table->index('type');
             $table->index('document_id');
         });
-
         Schema::create('document_items', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('company_id');
@@ -178,12 +148,10 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('company_id');
             $table->index('type');
             $table->index('document_id');
         });
-
         Schema::create('document_item_taxes', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('company_id');
@@ -197,12 +165,10 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('company_id');
             $table->index('type');
             $table->index('document_id');
         });
-
         Schema::create('document_totals', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('company_id');
@@ -216,13 +182,10 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('company_id');
             $table->index('type');
             $table->index('document_id');
         });
-
-        // Email templates
         Schema::create('email_templates', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -236,17 +199,12 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('company_id');
             $table->unique(['company_id', 'alias', 'deleted_at']);
         });
-
-        // Jobs
         Schema::table('failed_jobs', function (Blueprint $table) {
             $table->string('uuid')->after('id')->nullable()->unique();
         });
-
-        // Firewall
         Schema::create('firewall_ips', function (Blueprint $table) {
             $table->increments('id');
             $table->string('ip');
@@ -254,11 +212,9 @@ return new class extends Migration
             $table->boolean('blocked')->default(1);
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('ip');
             $table->unique(['ip', 'deleted_at']);
         });
-
         Schema::create('firewall_logs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('ip');
@@ -270,29 +226,21 @@ return new class extends Migration
             $table->text('request')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('ip');
         });
-
-        // Items
         Schema::table('items', function (Blueprint $table) {
             $table->string('sku')->nullable()->change();
             $table->integer('quantity')->default(1)->change();
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
-
             $connection = Schema::getConnection();
             $d_table = $connection->getDoctrineSchemaManager()->listTableDetails($connection->getTablePrefix() . 'items');
-
             if ($d_table->hasIndex('items_company_id_sku_deleted_at_unique')) {
-                // 1.3 update
                 $table->dropUnique('items_company_id_sku_deleted_at_unique');
             } else {
-                // 2.0 install
                 $table->dropUnique(['company_id', 'sku', 'deleted_at']);
             }
         });
-
         Schema::create('item_taxes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -302,59 +250,42 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index(['company_id', 'item_id']);
         });
-
-        // Media
         Schema::table('media', function (Blueprint $table) {
             $table->unsignedInteger('company_id')->default(0)->after('id');
             $table->unsignedInteger('created_by')->nullable()->after('size');
             $table->string('created_from', 100)->nullable()->after('size');
-
             $table->index('company_id');
         });
-
         Schema::table('mediables', function (Blueprint $table) {
             $table->unsignedInteger('company_id')->default(0)->after('media_id');
             $table->unsignedInteger('created_by')->nullable()->after('order');
             $table->string('created_from', 100)->nullable()->after('order');
-
             $table->index('company_id');
         });
-
-        // Modules
         Schema::table('modules', function (Blueprint $table) {
             $table->renameColumn('status', 'enabled');
         });
-
         Schema::table('modules', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
         });
-
         Schema::table('module_histories', function (Blueprint $table) {
             $table->dropColumn('category');
         });
-
         Schema::table('module_histories', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('description');
             $table->string('created_from', 100)->nullable()->after('description');
         });
-
-        // Reconciliations
         Schema::table('reconciliations', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('reconciled');
             $table->string('created_from', 100)->nullable()->after('reconciled');
         });
-
-        // Recurring
         Schema::table('recurring', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('count');
             $table->string('created_from', 100)->nullable()->after('count');
         });
-
-        // Reports
         Schema::create('reports', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -366,24 +297,17 @@ return new class extends Migration
             $table->string('created_from', 100)->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index('company_id');
             $table->index('class');
         });
-
-        // Roles
         Schema::table('roles', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('description');
             $table->string('created_from', 100)->nullable()->after('description');
         });
-
-        // Taxes
         Schema::table('taxes', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
         });
-
-        // Transactions
         Schema::create('transactions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('company_id');
@@ -405,35 +329,27 @@ return new class extends Migration
             $table->unsignedInteger('created_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
             $table->index(['company_id', 'type']);
             $table->index('account_id');
             $table->index('category_id');
             $table->index('contact_id');
             $table->index('document_id');
         });
-
-        // Transfers
         Schema::table('transfers', function (Blueprint $table) {
             $table->renameColumn('payment_id', 'expense_transaction_id');
         });
-
         Schema::table('transfers', function (Blueprint $table) {
             $table->renameColumn('revenue_id', 'income_transaction_id');
         });
-
         Schema::table('transfers', function (Blueprint $table) {
             $table->unsignedInteger('created_by')->nullable()->after('income_transaction_id');
             $table->string('created_from', 100)->nullable()->after('income_transaction_id');
         });
-
-        // Users
         Schema::table('users', function (Blueprint $table) {
             $table->string('landing_page', 70)->nullable()->default('dashboard')->after('locale');
             $table->unsignedInteger('created_by')->nullable()->after('enabled');
             $table->string('created_from', 100)->nullable()->after('enabled');
         });
-
         Schema::dropIfExists('invoices');
         Schema::dropIfExists('invoice_histories');
         Schema::dropIfExists('invoice_items');
@@ -447,14 +363,7 @@ return new class extends Migration
         Schema::dropIfExists('bill_statuses');
         Schema::dropIfExists('bill_totals');
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        //
     }
 };

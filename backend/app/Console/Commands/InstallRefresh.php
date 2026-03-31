@@ -1,41 +1,19 @@
 <?php
-
 namespace App\Console\Commands;
-
 use App\Models\Common\Company;
 use Illuminate\Console\Command;
-
 class InstallRefresh extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'install:refresh {--admin-password=123456}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Allows to refresh Akaunting installation directly through CLI';
-
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
         $user = user_model_class()::first();
         $company = Company::first();
-
         $this->info('Resetting migrations');
         $this->callSilent('migrate:reset', [
             '--force' => true,
         ]);
-
         $this->info('Installing Akaunting');
         $this->callSilent('install', [
             '--db-host' => env('DB_HOST'),
@@ -51,7 +29,6 @@ class InstallRefresh extends Command
             '--locale' => $company->locale,
             '--no-interaction' => true,
         ]);
-
         $this->info('Installation refreshed');
     }
 }

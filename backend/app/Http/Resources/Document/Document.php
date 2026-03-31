@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Resources\Document;
-
 use App\Http\Resources\Banking\Transaction;
 use App\Http\Resources\Common\Contact;
 use App\Http\Resources\Document\DocumentHistory;
@@ -11,15 +9,8 @@ use App\Http\Resources\Document\DocumentTotal;
 use App\Http\Resources\Setting\Category;
 use App\Http\Resources\Setting\Currency;
 use Illuminate\Http\Resources\Json\JsonResource;
-
 class Document extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
     public function toArray($request)
     {
         return [

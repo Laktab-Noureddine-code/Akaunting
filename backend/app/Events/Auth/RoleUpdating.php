@@ -1,21 +1,10 @@
 <?php
-
 namespace App\Events\Auth;
-
 use App\Abstracts\Event;
-
 class RoleUpdating extends Event
 {
     public $role;
-
     public $request;
-
-    /**
-     * Create a new event instance.
-     *
-     * @param $role
-     * @param $request
-     */
     public function __construct($role, $request)
     {
         $this->role = $role;

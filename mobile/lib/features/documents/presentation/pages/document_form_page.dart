@@ -45,18 +45,18 @@ class _DocumentFormView extends StatefulWidget {
 
 class _DocumentFormViewState extends State<_DocumentFormView> {
   final _formKey = GlobalKey<FormState>();
-  
+
   late TextEditingController _numberController;
   late TextEditingController _amountController;
-  
+
   DateTime _issueDate = DateTime.now();
   DateTime _dueDate = DateTime.now().add(const Duration(days: 30));
-  
+
   int? _selectedContactId;
   String? _selectedContactName;
   String _status = 'draft';
   String? _currencyCode;
-  
+
   final List<String> _statuses = ['draft', 'sent', 'received', 'viewed', 'partial', 'paid', 'cancelled'];
 
   @override
@@ -68,7 +68,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
     _selectedContactId = widget.document?.contactId;
     _selectedContactName = widget.document?.contactName;
     _currencyCode = widget.document?.currencyCode;
-    
+
     if (widget.document?.issueDate != null) {
       _issueDate = DateTime.tryParse(widget.document!.issueDate!) ?? DateTime.now();
     }
@@ -94,7 +94,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a currency')));
         return;
       }
-      
+
       final amount = double.tryParse(_amountController.text) ?? 0.0;
       final data = {
         'type': widget.document?.type ?? 'invoice',
@@ -126,7 +126,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
       }
     }
   }
-  
+
   Future<void> _selectDate(BuildContext context, bool isIssueDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -182,7 +182,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
                 validator: (value) => value == null || value.isEmpty ? 'Please enter a document number' : null,
               ),
               const SizedBox(height: 16),
-              
+
               BlocBuilder<ContactCubit, ContactState>(
                 builder: (context, state) {
                   if (state is ContactLoading) {
@@ -217,7 +217,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               TextFormField(
                 controller: _amountController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -229,7 +229,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
                 validator: (value) => value == null || value.isEmpty ? 'Please enter an amount' : null,
               ),
               const SizedBox(height: 16),
-              
+
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: 'Status',
@@ -248,14 +248,14 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               BlocBuilder<CurrencyCubit, CurrencyState>(
                 builder: (context, state) {
                   if (state is CurrencyLoading) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (state is CurrenciesLoaded) {
                     final currencies = state.currencies;
-                    
+
                     if (_currencyCode == null && currencies.isNotEmpty) {
                        WidgetsBinding.instance.addPostFrameCallback((_) {
                          setState(() {
@@ -263,7 +263,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
                          });
                        });
                     }
-                    
+
                     return DropdownButtonFormField<String>(
                       decoration: const InputDecoration(
                         labelText: 'Currency',
@@ -287,7 +287,7 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
               Row(
                 children: [
                   Expanded(
@@ -319,9 +319,9 @@ class _DocumentFormViewState extends State<_DocumentFormView> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               BlocBuilder<DocumentCubit, DocumentState>(
                 builder: (context, state) {
                   return BaseButton(

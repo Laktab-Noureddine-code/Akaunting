@@ -1,7 +1,5 @@
 <?php
-
 return [
-
     'options' => [
         'chart' => [
             'width' => '100%',
@@ -14,34 +12,24 @@ return [
                 'enabled' => false,
             ],
             'fontFamily' => '"Quicksand", sans-serif',
-            'foreColor' => '#595959',
+            'foreColor' => '
         ],
-
         'legend' => [
             'horizontalAlign' => 'left',
         ],
-
         'dataLabels' => [
             'enabled' => false,
         ],
-
         'grid' => [
             'show' => true,
-            'borderColor' => '#E5E7EB',
+            'borderColor' => '
         ],
-
         'markers' => [
             'size' => 5,
-            /*'colors' => [
-                '#ffffff',
-            ],
-            'strokeColors' => '#444444',
-            'strokeWidth' => 2,*/
             'hover' => [
                 'size' => 8,
             ],
         ],
-
         'states' => [
             'hover' => [
                 'filter' => [
@@ -49,17 +37,14 @@ return [
                 ],
             ],
         ],
-
         'stroke' => [
             'show' => true,
             'curve' => 'straight',
             'width' => 2,
         ],
-
         'fill' => [
             'opacity' => 1,
         ],
-
         'tooltip' => [
             'shared' => false,
             'followCursor' => true,
@@ -67,14 +52,11 @@ return [
                 'highlightDataSeries' => true,
             ],
         ],
-
         'xaxis' => [
             'labels' => [
                 'rotate' => 0,
             ],
             'tickAmount' => 3,
         ],
-
     ],
-
 ];

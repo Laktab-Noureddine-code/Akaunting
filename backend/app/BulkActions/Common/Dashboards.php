@@ -1,23 +1,17 @@
 <?php
-
 namespace App\BulkActions\Common;
-
 use App\Abstracts\BulkAction;
 use App\Jobs\Common\DeleteDashboard;
 use App\Jobs\Common\UpdateDashboard;
 use App\Models\Common\Dashboard;
-
 class Dashboards extends BulkAction
 {
     public $model = Dashboard::class;
-
     public $text = 'general.dashboards';
-
     public $path = [
         'group' => 'common',
         'type' => 'dashboards',
     ];
-
     public $actions = [
         'enable'    => [
             'icon'          => 'check_circle',
@@ -38,11 +32,9 @@ class Dashboards extends BulkAction
             'permission'    => 'delete-common-dashboards',
         ],
     ];
-
     public function disable($request)
     {
         $dashboards = $this->getSelectedRecords($request);
-
         foreach ($dashboards as $dashboard) {
             try {
                 $this->dispatch(new UpdateDashboard($dashboard, $request->merge(['enabled' => 0])));
@@ -51,11 +43,9 @@ class Dashboards extends BulkAction
             }
         }
     }
-
     public function destroy($request)
     {
         $dashboards = $this->getSelectedRecords($request);
-
         foreach ($dashboards as $dashboard) {
             try {
                 $this->dispatch(new DeleteDashboard($dashboard));

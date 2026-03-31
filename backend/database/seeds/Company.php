@@ -1,16 +1,8 @@
 <?php
-
 namespace Database\Seeds;
-
 use Illuminate\Database\Seeder;
-
 class Company extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
         $this->call(Accounts::class);

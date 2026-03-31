@@ -1,23 +1,17 @@
 <?php
-
 namespace App\BulkActions\Banking;
-
 use App\Abstracts\BulkAction;
 use App\Jobs\Banking\DeleteAccount;
 use App\Jobs\Banking\UpdateAccount;
 use App\Models\Banking\Account;
-
 class Accounts extends BulkAction
 {
     public $model = Account::class;
-
     public $text = 'general.accounts';
-
     public $path = [
         'group' => 'banking',
         'type' => 'accounts',
     ];
-
     public $actions = [
         'edit' => [
             'icon'          => 'edit',
@@ -46,36 +40,29 @@ class Accounts extends BulkAction
             'permission'    => 'delete-banking-accounts',
         ],
     ];
-
     public function edit($request)
     {
         $selected = $this->getSelectedInput($request);
-
         return $this->response('bulk-actions.banking.accounts.edit', compact('selected'));
     }
-
     public function update($request)
     {
         $accounts = $this->getSelectedRecords($request);
-
         foreach ($accounts as $account) {
             try {
                 $request->merge([
                     'enabled' => $account->enabled,
                     'currency_code' => ($request->get('currency_code')) ?? $account->currency_code,
-                ]); // for update job authorize..
-
+                ]); 
                 $this->dispatch(new UpdateAccount($account, $this->getUpdateRequest($request)));
             } catch (\Exception $e) {
                 flash($e->getMessage())->error()->important();
             }
         }
     }
-
     public function disable($request)
     {
         $accounts = $this->getSelectedRecords($request);
-
         foreach ($accounts as $account) {
             try {
                 $this->dispatch(new UpdateAccount($account, $request->merge(['enabled' => 0])));
@@ -84,11 +71,9 @@ class Accounts extends BulkAction
             }
         }
     }
-
     public function destroy($request)
     {
         $accounts = $this->getSelectedRecords($request);
-
         foreach ($accounts as $account) {
             try {
                 $this->dispatch(new DeleteAccount($account));

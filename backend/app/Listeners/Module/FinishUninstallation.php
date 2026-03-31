@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Listeners\Module;
-
 use App\Events\Module\Uninstalled as Event;
 use App\Exceptions\Common\LastDashboard;
 use App\Jobs\Common\DeleteDashboard;
@@ -14,17 +12,9 @@ use App\Models\Common\Widget;
 use App\Models\Setting\EmailTemplate;
 use App\Traits\Jobs;
 use Throwable;
-
 class FinishUninstallation
 {
     use Jobs;
-
-    /**
-     * Handle the event.
-     *
-     * @param  Event $event
-     * @return void
-     */
     public function handle(Event $event)
     {
         $this->deleteDashboards($event->alias);
@@ -33,13 +23,6 @@ class FinishUninstallation
         $this->deleteReports($event->alias);
         $this->deleteFavorites($event->alias);
     }
-
-    /**
-     * Delete any dashboard created by the module.
-     *
-     * @param  string $alias
-     * @return void
-     */
     protected function deleteDashboards($alias)
     {
         Dashboard::alias($alias)->get()->each(function ($dashboard) {
@@ -49,18 +32,10 @@ class FinishUninstallation
                 if ($e instanceof LastDashboard) {
                     return;
                 }
-
                 report($e);
             }
         });
     }
-
-    /**
-     * Delete any widget created by the module.
-     *
-     * @param  string $alias
-     * @return void
-     */
     protected function deleteWidgets($alias)
     {
         Widget::alias($alias)->get()->each(function ($widget) {
@@ -71,13 +46,6 @@ class FinishUninstallation
             }
         });
     }
-
-    /**
-     * Delete any email template created by the module.
-     *
-     * @param  string $alias
-     * @return void
-     */
     protected function deleteEmailTemplates($alias)
     {
         EmailTemplate::moduleAlias($alias)->get()->each(function ($template) {
@@ -88,13 +56,6 @@ class FinishUninstallation
             }
         });
     }
-
-    /**
-     * Delete any report created by the module.
-     *
-     * @param  string $alias
-     * @return void
-     */
     protected function deleteReports($alias)
     {
         Report::alias($alias)->get()->each(function ($report) {
@@ -105,37 +66,24 @@ class FinishUninstallation
             }
         });
     }
-
-    /**
-     * Delete any favorite created by the module.
-     *
-     * @param  string $alias
-     * @return void
-     */
     protected function deleteFavorites($alias)
     {
         $favorites = setting('favorites.menu', []);
-
         if (empty($favorites)) {
             return;
         }
-
         try {
             foreach ($favorites as $user_id => $user_favorites) {
                 $user_favorites = json_decode($user_favorites, true);
-    
                 foreach ($user_favorites as $key => $favorite) {
                     $route = $favorite['route'];
-    
                     if (is_array($route)) {
                         $route = $route[0];
                     }
-    
                     if (str_contains($route, $alias)) {
                         unset($user_favorites[$key]);
                     }
                 }
-    
                 setting()->set('favorites.menu.' . $user_id, json_encode($user_favorites));
                 setting()->save();
             }

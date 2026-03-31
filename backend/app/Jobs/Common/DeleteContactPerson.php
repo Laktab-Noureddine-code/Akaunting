@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Jobs\Common;
-
 use App\Abstracts\Job;
 use App\Interfaces\Job\ShouldDelete;
-
 class DeleteContactPerson extends Job implements ShouldDelete
 {
     public function handle(): bool
@@ -12,7 +9,6 @@ class DeleteContactPerson extends Job implements ShouldDelete
         \DB::transaction(function () {
             $this->model->delete();
         });
-
         return true;
     }
 }

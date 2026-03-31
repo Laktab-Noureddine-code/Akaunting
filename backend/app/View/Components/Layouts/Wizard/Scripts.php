@@ -1,77 +1,47 @@
 <?php
-
 namespace App\View\Components\Layouts\Wizard;
-
 use Akaunting\Money\Currency as MoneyCurrency;
 use App\Abstracts\View\Component;
 use App\Models\Common\Media;
 use App\Models\Setting\Currency;
 use App\Traits\Modules;
-
 class Scripts extends Component
 {
     use Modules;
-
     public $company;
-
     public $translations;
-
     public $currencies;
-
     public $currency_codes;
-
     public $modules;
-
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|string
-     */
     public function render()
     {
         $this->company = $this->getCompany();
-
         $this->translations = $this->getTransalations();
-
         $this->currencies = $this->getCurrencies();
-
-        // Prepare codes
         $this->currency_codes = $this->getCurrencyCodes();
-
         $this->modules = $this->getFeaturedModules([
             'query' => [
                 'limit' => 5
             ]
         ]);
-
         return view('components.layouts.wizard.scripts');
     }
-
     protected function getCompany()
     {
         $company = company();
-
         $company->api_key = setting('apps.api_key');
         $company->financial_start = setting('localisation.financial_start');
-
         $logo_id = setting('company.logo');
-
         $logo = false;
-
         if ($logo_id) {
             $logo = Media::find($logo_id);
-
             if ($logo) {
                 $logo->path = route('uploads.get', $logo->id);
             }
         }
-
         $company->logo = $logo;
-
         return $company;
     }
-
-    /* Wizard page transactions */
     protected function getTransalations()
     {
         return [
@@ -88,7 +58,6 @@ class Scripts extends Component
                 'save' => trans('general.save'),
                 'country' => trans_choice('general.countries', 1),
             ],
-
             'currencies' => [
                 'title' => trans_choice('general.currencies', 2),
                 'add_new' => trans('general.add_new'),
@@ -116,7 +85,6 @@ class Scripts extends Component
                 'delete_confirm' => trans('general.delete_confirm'),
                 'cancel' => trans('general.cancel'),
             ],
-
             'finish' => [
                 'title' => trans('modules.ready'),
                 'recommended_apps' => trans('modules.recommended_apps'),
@@ -132,29 +100,22 @@ class Scripts extends Component
             ]
         ];
     }
-
     protected function getCurrencies()
     {
         $currencies = collect();
-
         Currency::all()->each(function ($currency) use (&$currencies) {
             $currency->default = default_currency() == $currency->code;
-
             $currencies->push($currency);
         });
-
         return $currencies;
     }
-
     protected function getCurrencyCodes()
     {
         $codes = [];
         $money_currencies = MoneyCurrency::getCurrencies();
-
         foreach ($money_currencies as $key => $item) {
             $codes[$key] = $key;
         }
-
         return $codes;
     }
 }

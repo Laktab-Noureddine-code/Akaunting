@@ -1,13 +1,9 @@
 <?php
-
 use App\Models\Banking\Transaction;
 use App\Models\Common\Contact;
 use App\Models\Document\Document;
 use App\Models\Setting\Category;
-
 return [
-
-    // Categories
     'category' => [
         Category::INCOME_TYPE => [
             'alias'             => '',
@@ -15,21 +11,18 @@ return [
                 'prefix'        => 'general',
             ],
         ],
-
         Category::EXPENSE_TYPE => [
             'alias'             => '',
             'translation' => [
                 'prefix'        => 'general',
             ],
         ],
-
         Category::ITEM_TYPE => [
             'alias'             => '',
             'translation' => [
                 'prefix'        => 'general',
             ],
         ],
-
         Category::OTHER_TYPE => [
             'alias'             => '',
             'translation' => [
@@ -37,23 +30,19 @@ return [
             ],
         ],
     ],
-
-    // Contacts
     'contact' => [
         Contact::CUSTOMER_TYPE => [
-            'alias'                 => '', // core empty but module write own alias
+            'alias'                 => '', 
             'group'                 => 'sales',
             'route' => [
-                'prefix'            => 'customers', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'customer', // sales/customers/{parameter}/edit
-                //'create'          => 'customers.create', // if you change route, you can write full path
+                'prefix'            => 'customers', 
+                'parameter'         => 'customer', 
             ],
             'permission' => [
                 'prefix'            => 'customers',
-                //'create'          => 'create-sales-customers',
             ],
             'translation' => [
-                'prefix'                        => 'customers', // this translation file name.
+                'prefix'                        => 'customers', 
                 'section_general_description'   => 'customers.form_description.general',
                 'section_billing_description'   => 'customers.form_description.billing',
                 'section_address_description'   => 'customers.form_description.address',
@@ -68,21 +57,18 @@ return [
                 'file'              => 'contacts',
             ],
         ],
-
         Contact::VENDOR_TYPE => [
-            'alias'                 => '', // core empty but module write own alias
+            'alias'                 => '', 
             'group'                 => 'purchases',
             'route' => [
-                'prefix'            => 'vendors', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'vendor', // sales/vendors/{parameter}/edit
-                //'create'          => 'vendors.create', // if you change route, you can write full path
+                'prefix'            => 'vendors', 
+                'parameter'         => 'vendor', 
             ],
             'permission' => [
                 'prefix'            => 'vendors',
-                //'create'          => 'create-purchases-vendors',
             ],
             'translation' => [
-                'prefix'                        => 'vendors', // this translation file name.
+                'prefix'                        => 'vendors', 
                 'section_general_description'   => 'vendors.form_description.general',
                 'section_billing_description'   => 'vendors.form_description.billing',
                 'section_address_description'   => 'vendors.form_description.address',
@@ -98,18 +84,15 @@ return [
             ],
         ],
     ],
-
-    // Documents
     'document' => [
         Document::INVOICE_TYPE => [
-            'alias'                     => '', // core empty but module write own alias
-            'group'                     => 'sales', // controller folder name for permission and route
+            'alias'                     => '', 
+            'group'                     => 'sales', 
             'route' => [
-                'prefix'                => 'invoices', // core use with group + prefix, module ex. estimates
-                'parameter'             => 'invoice', // sales/invoices/{parameter}/edit
+                'prefix'                => 'invoices', 
+                'parameter'             => 'invoice', 
                 'document'              => 'invoices.index',
                 'recurring'             => 'recurring-invoices.index',
-                //'create'              => 'invoices.create', // if you change route, you can write full path
                 'params' => [
                     'unpaid'            => ['search' => 'status:sent,viewed,partial'],
                     'draft'             => ['search' => 'status:draft'],
@@ -117,12 +100,11 @@ return [
                 ],
             ],
             'permission' => [
-                'prefix'                => 'invoices', // this controller file name.
-                //'create'              => 'create-sales-invoices', // if you change action permission key, you can write full permission
+                'prefix'                => 'invoices', 
             ],
             'translation' => [
-                'prefix'                        => 'invoices', // this translation file name.
-                'add_contact'                   => 'general.customers', //
+                'prefix'                        => 'invoices', 
+                'add_contact'                   => 'general.customers', 
                 'issued_at'                     => 'invoices.invoice_date',
                 'due_at'                        => 'invoices.due_date',
                 'section_billing_description'   => 'invoices.form_description.billing',
@@ -132,12 +114,12 @@ return [
             ],
             'category_type'             => 'income',
             'transaction_type'          => 'income',
-            'contact_type'              => 'customer', // use contact type
-            'inventory_stock_action'    => 'decrease', // decrease stock in stock tracking
+            'contact_type'              => 'customer', 
+            'inventory_stock_action'    => 'decrease', 
             'transaction' => [
-                'email_template'        => 'invoice_payment_customer', // use email template
+                'email_template'        => 'invoice_payment_customer', 
             ],
-            'hide'                      => [], // for document items
+            'hide'                      => [], 
             'class'                     => [],
             'notification' => [
                 'class'                 => 'App\Notifications\Sale\Invoice',
@@ -158,25 +140,22 @@ return [
                 'cancelled'             => 'restore',
             ],
         ],
-
         Document::INVOICE_RECURRING_TYPE => [
-            'alias'                     => '', // core empty but module write own alias
-            'group'                     => 'sales', // controller folder name for permission and route
+            'alias'                     => '', 
+            'group'                     => 'sales', 
             'route' => [
-                'prefix'                => 'recurring-invoices', // core use with group + prefix, module ex. estimates
-                'parameter'             => 'recurring_invoice', // sales/invoices/{parameter}/edit
+                'prefix'                => 'recurring-invoices', 
+                'parameter'             => 'recurring_invoice', 
                 'document'              => 'invoices.index',
                 'recurring'             => 'recurring-invoices.index',
                 'end'                   => 'recurring-invoices.end',
-                //'create'              => 'invoices.create', // if you change route, you can write full path
             ],
             'permission' => [
-                'prefix'                => 'invoices', // this controller file name.
-                //'create'              => 'create-sales-invoices', // if you change action permission key, you can write full permission
+                'prefix'                => 'invoices', 
             ],
             'translation' => [
-                'prefix'                        => 'invoices', // this translation file name.
-                'add_contact'                   => 'general.customers', //
+                'prefix'                        => 'invoices', 
+                'add_contact'                   => 'general.customers', 
                 'issued_at'                     => 'invoices.invoice_date',
                 'due_at'                        => 'invoices.due_date',
                 'tab_document'                  => 'general.invoices',
@@ -187,12 +166,11 @@ return [
             ],
             'category_type'             => 'income',
             'transaction_type'          => 'income',
-            'contact_type'              => 'customer', // use contact type
-            'inventory_stock_action'    => 'decrease', // decrease stock in stock tracking
-            'hide'                      => [], // for document items
+            'contact_type'              => 'customer', 
+            'inventory_stock_action'    => 'decrease', 
+            'hide'                      => [], 
             'class'                     => [],
             'notification' => [
-
             ],
             'auto_send'                 => 'App\Events\Document\DocumentSent',
             'image_empty_page'          => 'public/img/empty_pages/recurring_templates.png',
@@ -206,7 +184,6 @@ return [
                 'end'                   => 'schedule',
             ],
         ],
-
         Document::BILL_TYPE => [
             'alias'                     => '',
             'group'                     => 'purchases',
@@ -215,7 +192,6 @@ return [
                 'parameter'             => 'bill',
                 'document'              => 'bills.index',
                 'recurring'             => 'recurring-bills.index',
-                //'create'              => 'bilss.create',
                 'params' => [
                     'unpaid'            => ['search' => 'status:received,partial'],
                     'draft'             => ['search' => 'status:draft'],
@@ -224,7 +200,6 @@ return [
             ],
             'permission' => [
                 'prefix'                => 'bills',
-                //'create'              => 'create-purchases-bills',
             ],
             'translation' => [
                 'prefix'                        => 'bills',
@@ -238,9 +213,9 @@ return [
             'category_type'             => 'expense',
             'transaction_type'          => 'expense',
             'contact_type'              => 'vendor',
-            'inventory_stock_action'    => 'increase', // increases stock in stock tracking
+            'inventory_stock_action'    => 'increase', 
             'transaction' => [
-                'email_template'        => 'invoice_payment_customer', // use email template
+                'email_template'        => 'invoice_payment_customer', 
             ],
             'hide'                      => [],
             'notification' => [
@@ -262,7 +237,6 @@ return [
                 'cancelled'             => 'restore',
             ],
         ],
-
         Document::BILL_RECURRING_TYPE => [
             'alias'                     => '',
             'group'                     => 'purchases',
@@ -272,11 +246,9 @@ return [
                 'document'              => 'bills.index',
                 'recurring'             => 'recurring-bills.index',
                 'end'                   => 'recurring-bills.end',
-                //'create'              => 'bilss.create',
             ],
             'permission' => [
                 'prefix'                => 'bills',
-                //'create'              => 'create-purchases-bills',
             ],
             'translation' => [
                 'prefix'                        => 'bills',
@@ -291,11 +263,10 @@ return [
             'category_type'             => 'expense',
             'transaction_type'          => 'expense',
             'contact_type'              => 'vendor',
-            'inventory_stock_action'    => 'increase', // increases stock in stock tracking
+            'inventory_stock_action'    => 'increase', 
             'hide'                      => [],
             'class'                     => [],
             'notification' => [
-
             ],
             'auto_send'                 => 'App\Events\Document\DocumentReceived',
             'image_empty_page'          => 'public/img/empty_pages/recurring_templates.png',
@@ -310,15 +281,12 @@ return [
             ],
         ],
     ],
-
-    // Transactions
     'transaction' => [
         'transactions' => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'transaction', // banking/transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'transactions', 
+                'parameter'         => 'transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -327,10 +295,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'                    => 'transactions', // this translation file name.
+                'prefix'                    => 'transactions', 
                 'related_document_amount'   => 'invoices.invoice_amount',
                 'transactions'              => 'general.incomes',
             ],
@@ -343,13 +310,11 @@ return [
                 'file'              => 'transactions',
             ],
         ],
- 
         Transaction::INCOME_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'transaction', // banking/transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'transactions', 
+                'parameter'         => 'transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -358,10 +323,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'                    => 'transactions', // this translation file name.
+                'prefix'                    => 'transactions', 
                 'related_document_amount'   => 'invoices.invoice_amount',
                 'transactions'              => 'general.incomes',
             ],
@@ -374,13 +338,11 @@ return [
                 'file'              => 'transactions',
             ],
         ],
-
         Transaction::INCOME_TRANSFER_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'transaction', // banking/transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'transactions', 
+                'parameter'         => 'transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -389,10 +351,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'                    => 'transactions', // this translation file name.
+                'prefix'                    => 'transactions', 
                 'related_document_amount'   => 'invoices.invoice_amount',
                 'transactions'              => 'general.incomes',
             ],
@@ -405,13 +366,11 @@ return [
                 'file'              => 'transactions',
             ],
         ],
-
         Transaction::INCOME_SPLIT_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'transaction', // banking/transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'transactions', 
+                'parameter'         => 'transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -420,10 +379,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'                    => 'transactions', // this translation file name.
+                'prefix'                    => 'transactions', 
                 'related_document_amount'   => 'invoices.invoice_amount',
                 'transactions'              => 'general.incomes',
             ],
@@ -435,13 +393,11 @@ return [
                 'file'              => 'transactions',
             ],
         ],
-
         Transaction::INCOME_RECURRING_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'recurring-transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'recurring_transaction', // banking/recurring-transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'recurring-transactions', 
+                'parameter'         => 'recurring_transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -450,10 +406,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'            => 'transactions', // this translation file name.
+                'prefix'            => 'transactions', 
                 'new'               => 'general.recurring_incomes',
                 'transactions'      => 'general.incomes',
             ],
@@ -468,13 +423,11 @@ return [
                 'end'               => 'schedule',
             ],
         ],
-
         Transaction::EXPENSE_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'transaction', // banking/transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'transactions', 
+                'parameter'         => 'transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -483,10 +436,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'                    => 'transactions', // this translation file name.
+                'prefix'                    => 'transactions', 
                 'related_document_amount'   => 'bills.bill_amount',
             ],
             'contact_type'          => 'vendor',
@@ -498,13 +450,11 @@ return [
                 'file'              => 'transactions',
             ],
         ],
-
         Transaction::EXPENSE_TRANSFER_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'transaction', // banking/transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'transactions', 
+                'parameter'         => 'transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -513,10 +463,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'                    => 'transactions', // this translation file name.
+                'prefix'                    => 'transactions', 
                 'related_document_amount'   => 'bills.bill_amount',
             ],
             'contact_type'          => 'vendor',
@@ -528,13 +477,11 @@ return [
                 'file'              => 'transactions',
             ],
         ],
-
         Transaction::EXPENSE_SPLIT_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'transaction', // banking/transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'transactions', 
+                'parameter'         => 'transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -543,10 +490,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'                    => 'transactions', // this translation file name.
+                'prefix'                    => 'transactions', 
                 'related_document_amount'   => 'bills.bill_amount',
             ],
             'contact_type'          => 'vendor',
@@ -557,13 +503,11 @@ return [
                 'file'              => 'transactions',
             ],
         ],
-
         Transaction::EXPENSE_RECURRING_TYPE => [
             'group'                 => 'banking',
             'route' => [
-                'prefix'            => 'recurring-transactions', // core use with group + prefix, module ex. estimates
-                'parameter'         => 'recurring_transaction', // banking/recurring-transactions/{parameter}/edit
-                //'create'          => 'transactions.create', // if you change route, you can write full path
+                'prefix'            => 'recurring-transactions', 
+                'parameter'         => 'recurring_transaction', 
                 'params' => [
                     'income'        => ['search' => 'type:income'],
                     'expense'       => ['search' => 'type:expense'],
@@ -572,10 +516,9 @@ return [
             ],
             'permission' => [
                 'prefix'            => 'transactions',
-                //'create'          => 'create-banking-transactions',
             ],
             'translation' => [
-                'prefix'            => 'transactions', // this translation file name.
+                'prefix'            => 'transactions', 
                 'new'               => 'general.recurring_expenses',
                 'transactions'      => 'general.expenses',
             ],
@@ -591,5 +534,4 @@ return [
             ],
         ],
     ],
-
 ];
