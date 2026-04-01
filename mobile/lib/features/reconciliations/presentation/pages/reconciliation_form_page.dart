@@ -44,12 +44,12 @@ class ReconciliationFormView extends StatefulWidget {
 class _ReconciliationFormViewState extends State<ReconciliationFormView> {
   final _formKey = GlobalKey<FormState>();
   final _closingBalanceController = TextEditingController();
-
+  
   int? _accountId;
   DateTime? _startedAt;
   DateTime? _endedAt;
   bool _reconciled = false;
-
+  
   List<TransactionModel> _transactions = [];
   final Set<int> _selectedTransactions = {};
 
@@ -67,7 +67,7 @@ class _ReconciliationFormViewState extends State<ReconciliationFormView> {
       _endedAt = DateTime.now().add(const Duration(days: 30));
       _closingBalanceController.text = '0.00';
     }
-
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _fetchTransactions();
     });
@@ -76,7 +76,7 @@ class _ReconciliationFormViewState extends State<ReconciliationFormView> {
   void _fetchTransactions() {
     if (_accountId != null && _startedAt != null && _endedAt != null) {
       context.read<ReconciliationCubit>().loadTransactions(
-        _accountId!,
+        _accountId!, 
         '${_startedAt!.toIso8601String().split('T').first} 00:00:00',
         '${_endedAt!.toIso8601String().split('T').first} 23:59:59'
       );
@@ -111,7 +111,7 @@ class _ReconciliationFormViewState extends State<ReconciliationFormView> {
   void _submit() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-
+      
       if (_accountId == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Please select an account')),
@@ -151,7 +151,7 @@ class _ReconciliationFormViewState extends State<ReconciliationFormView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.reconciliation == null ? 'New Reconciliation' : 'Edit Reconciliation',
+        title: Text(widget.reconciliation == null ? 'New Reconciliation' : 'Edit Reconciliation', 
             style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -185,3 +185,134 @@ class _ReconciliationFormViewState extends State<ReconciliationFormView> {
               children: [
                 const SizedBox(height: 8),
 
+                // Account Selection
+                BlocBuilder<AccountCubit, AccountState>(
+                  builder: (context, accState) {
+                    if (accState is AccountLoading) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    }
+                    if (accState is AccountsLoaded) {
+                      return AkauntingSelect(
+                        title: 'Account',
+                        value: _accountId?.toString(),
+                        options: accState.accounts.map((acc) => AkauntingSelectOption(value: acc.name, key: acc.id.toString())).toList(),
+                        onChanged: (val) {
+                          setState(() {
+                            _accountId = val != null ? int.tryParse(val) : null;
+                          });
+                          _fetchTransactions();
+                        },
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+                
+                const SizedBox(height: 16),
+
+                // Started At
+                InkWell(
+                  onTap: () => _selectDate(context, true),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Started At',
+                      border: OutlineInputBorder(),
+                    ),
+                    child: Text(_startedAt?.toIso8601String().split('T').first ?? 'Select Date'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Ended At
+                InkWell(
+                  onTap: () => _selectDate(context, false),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Ended At',
+                      border: OutlineInputBorder(),
+                    ),
+                    child: Text(_endedAt?.toIso8601String().split('T').first ?? 'Select Date'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Closing Balance
+                BaseInput(
+                  label: 'Closing Balance',
+                  controller: _closingBalanceController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                ),
+                const SizedBox(height: 16),
+                
+                SwitchListTile(
+                  title: const Text('Reconciled', style: TextStyle(fontWeight: FontWeight.bold)),
+                  value: _reconciled,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _reconciled = value;
+                    });
+                  },
+                  contentPadding: EdgeInsets.zero,
+                ),
+
+                if (_transactions.isNotEmpty) ...[
+                  const SizedBox(height: 16),
+                  const Text('Transactions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _transactions.length,
+                      separatorBuilder: (_, __) => const Divider(height: 1),
+                      itemBuilder: (context, index) {
+                        final tx = _transactions[index];
+                        final isSelected = _selectedTransactions.contains(tx.id);
+                        return CheckboxListTile(
+                          value: isSelected,
+                          onChanged: (bool? val) {
+                            setState(() {
+                              if (val == true) {
+                                _selectedTransactions.add(tx.id);
+                              } else {
+                                _selectedTransactions.remove(tx.id);
+                              }
+                            });
+                          },
+                          title: Text(tx.amountFormatted ?? '\$${tx.amount.toStringAsFixed(2)}', 
+                                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                          subtitle: Text('${tx.paidAt.split('T').first} - ${tx.description ?? tx.type}'),
+                          controlAffinity: ListTileControlAffinity.leading,
+                        );
+                      },
+                    ),
+                  ),
+                ] else if (_accountId != null) ...[
+                  const SizedBox(height: 16),
+                  const Text('No transactions found for the selected period.', 
+                             style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic)),
+                ],
+
+                const SizedBox(height: 32),
+                
+                BaseButton(
+                  onPressed: isSaving ? null : _submit,
+                  type: ButtonType.primary,
+                  block: true,
+                  child: const Text('Save', style: TextStyle(color: Colors.white, fontSize: 16)),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

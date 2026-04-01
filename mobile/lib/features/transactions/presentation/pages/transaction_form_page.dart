@@ -309,4 +309,21 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
       'number': _numberController.text.trim(),
       'paid_at': '${_dateController.text} 00:00:00',
       'amount': double.tryParse(_amountController.text) ?? 0.0,
-      'currency_code': 'USD',
+      'currency_code': 'USD', // defaulting for now
+      'currency_rate': 1,
+      'description': _descriptionController.text,
+      'payment_method': _paymentMethod,
+      'account_id': _accountId,
+      'category_id': _categoryId,
+    };
+
+    if (_contactId != null) data['contact_id'] = _contactId as Object;
+    if (_referenceController.text.isNotEmpty) data['reference'] = _referenceController.text;
+
+    if (widget.transaction == null) {
+      _cubit.createTransaction(data);
+    } else {
+      _cubit.updateTransaction(widget.transaction!.id, data);
+    }
+  }
+}

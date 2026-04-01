@@ -15,7 +15,7 @@ class CompanyFormPage extends StatefulWidget {
 
 class _CompanyFormPageState extends State<CompanyFormPage> {
   final _formKey = GlobalKey<FormState>();
-
+  
   late TextEditingController _nameController;
   late TextEditingController _emailController;
   late TextEditingController _currencyController;

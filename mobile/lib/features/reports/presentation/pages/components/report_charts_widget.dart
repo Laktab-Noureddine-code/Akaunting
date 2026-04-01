@@ -41,11 +41,11 @@ class ReportChartsWidget extends StatelessWidget {
 
         return Column(
           children: [
-            if (hasBarData)
+            if (hasBarData) 
               _buildBarChartCard(context, dates, currentTotals),
-            if (hasBarData && hasDonutData)
+            if (hasBarData && hasDonutData) 
               const SizedBox(height: 16),
-            if (hasDonutData)
+            if (hasDonutData) 
               _buildDonutChartCard(context, currentNames, currentValues),
             const SizedBox(height: 24),
           ],
@@ -184,3 +184,90 @@ class ReportChartsWidget extends StatelessWidget {
 
     if (rowTotals.isEmpty) return const SizedBox.shrink();
 
+    // Sort and take top 5
+    final sortedEntries = rowTotals.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    final topEntries = sortedEntries.take(5).toList();
+
+    final List<Color> colors = [
+      Colors.blue,
+      Colors.red,
+      Colors.green,
+      Colors.orange,
+      Colors.purple,
+    ];
+
+    List<PieChartSectionData> sections = [];
+    int i = 0;
+    for (final entry in topEntries) {
+      sections.add(
+        PieChartSectionData(
+          color: colors[i % colors.length],
+          value: entry.value,
+          title: '\${((entry.value / rowTotals.values.reduce((a, b) => a + b)) * 100).toStringAsFixed(0)}%',
+          radius: 50,
+          titleStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      );
+      i++;
+    }
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text('Breakdown', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 200,
+                    child: PieChart(
+                      PieChartData(
+                        pieTouchData: PieTouchData(enabled: false),
+                        borderData: FlBorderData(show: false),
+                        sectionsSpace: 2,
+                        centerSpaceRadius: 40,
+                        sections: sections,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(topEntries.length, (idx) {
+                      final item = topEntries[idx];
+                      final name = names[item.key]?.toString() ?? item.key;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Container(width: 12, height: 12, color: colors[idx % colors.length]),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                name,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

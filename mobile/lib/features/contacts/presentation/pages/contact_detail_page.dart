@@ -123,3 +123,100 @@ class _ContactDetailViewState extends State<_ContactDetailView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Header section
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              AppBadge(
+                                type: BadgeType.primary,
+                                child: Text(_contact.type.toUpperCase()),
+                              ),
+                              const SizedBox(width: 8),
+                              if (!_contact.enabled)
+                                const AppBadge(
+                                  type: BadgeType.danger,
+                                  child: Text('Disabled'),
+                                ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                
+                // Details Card
+                const Text('Contact Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 8),
+                AppCard(
+                  child: Column(
+                    children: [
+                      _DetailRow(label: 'Email', value: _contact.email ?? 'N/A'),
+                      const Divider(),
+                      _DetailRow(label: 'Phone', value: _contact.phone ?? 'N/A'),
+                      const Divider(),
+                      _DetailRow(label: 'Tax Number', value: _contact.taxNumber ?? 'N/A'),
+                      const Divider(),
+                      _DetailRow(label: 'Currency', value: _contact.currencyCode?.toUpperCase() ?? 'Default'),
+                      const Divider(),
+                      _DetailRow(label: 'Address', value: _contact.address ?? 'N/A'),
+                      const Divider(),
+                      _DetailRow(label: 'City', value: _contact.city ?? 'N/A'),
+                      const Divider(),
+                      _DetailRow(label: 'Country', value: _contact.country ?? 'N/A'),
+                      const Divider(),
+                      _DetailRow(label: 'Website', value: _contact.website ?? 'N/A'),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Enable/Disable button
+                BaseButton(
+                  onPressed: () {
+                    if (_contact.enabled) {
+                      context.read<ContactCubit>().disableContact(_contact.id);
+                    } else {
+                      context.read<ContactCubit>().enableContact(_contact.id);
+                    }
+                  },
+                  type: _contact.enabled ? ButtonType.warning : ButtonType.success,
+                  block: true,
+                  child: Text(_contact.enabled ? 'Disable Contact' : 'Enable Contact'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _DetailRow extends StatelessWidget {
+  final String label;
+  final String value;
+
+  const _DetailRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+          Flexible(child: Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black87), textAlign: TextAlign.right)),
+        ],
+      ),
+    );
+  }
+}

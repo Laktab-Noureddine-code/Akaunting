@@ -31,8 +31,8 @@ class ReportModel {
         throw Exception('Source is not a map');
       }
 
-      final json = source is Map<String, dynamic>
-          ? source
+      final json = source is Map<String, dynamic> 
+          ? source 
           : Map<String, dynamic>.from(source);
 
       Map<String, dynamic> parseMap(dynamic value) {
